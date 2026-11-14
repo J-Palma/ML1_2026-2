@@ -1,0 +1,6 @@
+Posición,Modelo,Accuracy (%),Balanced Acc (%),F1 Macro,F1 Weighted,Precision Macro,Recall Macro
+1,XGBoost (300 Árboles),72.18,68.84,0.7057,0.7138,0.7617,0.6884
+2,SVM (Kernel RBF),68.95,66.18,0.6702,0.6798,0.6968,0.6618
+3,Random Forest (200 árboles),62.1,57.73,0.5798,0.6051,0.6242,0.5773
+4,Regresión Logística L2 (Baseline),57.66,59.03,0.5676,0.5709,0.5576,0.5903
+5,SVD Subespacios (Menor Norma),55.24,52.96,0.5516,0.55,0.6052,0.5296

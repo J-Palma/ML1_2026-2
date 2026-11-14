@@ -1,0 +1,25 @@
+# Machine Learning, pinned to the environment used to serialize the models
+numpy
+pandas
+scipy
+scikit-learn==1.9.0
+xgboost==3.4.1
+joblib
+opencv-python-headless
+matplotlib
+seaborn
+
+# Notebook environment
+jupyter
+ipykernel
+tqdm
+
+# Local prediction API
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Interactive dashboard
+streamlit
+plotly
+requests

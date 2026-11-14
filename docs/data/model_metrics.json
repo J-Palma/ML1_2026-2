@@ -1,0 +1,57 @@
+{
+  "project": "Clasificacion Artrosis de Rodilla - ML1 FIUNA",
+  "best_model": "XGBoost (300 Árboles)",
+  "best_model_f1_macro": 0.7057,
+  "comparison_table": [
+    {
+      "Modelo": "SVD Subespacios (Menor Norma)",
+      "Accuracy (%)": 55.24,
+      "Balanced Acc (%)": 52.96,
+      "F1 Macro": 0.5516,
+      "F1 Weighted": 0.55,
+      "Precision Macro": 0.6052,
+      "Recall Macro": 0.5296
+    },
+    {
+      "Modelo": "SVM (Kernel RBF)",
+      "Accuracy (%)": 68.95,
+      "Balanced Acc (%)": 66.18,
+      "F1 Macro": 0.6702,
+      "F1 Weighted": 0.6798,
+      "Precision Macro": 0.6968,
+      "Recall Macro": 0.6618
+    },
+    {
+      "Modelo": "XGBoost (300 Árboles)",
+      "Accuracy (%)": 72.18,
+      "Balanced Acc (%)": 68.84,
+      "F1 Macro": 0.7057,
+      "F1 Weighted": 0.7138,
+      "Precision Macro": 0.7617,
+      "Recall Macro": 0.6884
+    },
+    {
+      "Modelo": "Random Forest (200 árboles)",
+      "Accuracy (%)": 62.1,
+      "Balanced Acc (%)": 57.73,
+      "F1 Macro": 0.5798,
+      "F1 Weighted": 0.6051,
+      "Precision Macro": 0.6242,
+      "Recall Macro": 0.5773
+    },
+    {
+      "Modelo": "Regresión Logística L2 (Baseline)",
+      "Accuracy (%)": 57.66,
+      "Balanced Acc (%)": 59.03,
+      "F1 Macro": 0.5676,
+      "F1 Weighted": 0.5709,
+      "Precision Macro": 0.5576,
+      "Recall Macro": 0.5903
+    }
+  ],
+  "svd_best_k": 30,
+  "svm_best_C": 50.0,
+  "xgb_best_n_estimators": 300,
+  "rf_best_n_estimators": 200,
+  "rf_best_min_samples_leaf": 2
+}

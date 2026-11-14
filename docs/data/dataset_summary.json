@@ -1,0 +1,39 @@
+{
+  "total_images": 1650,
+  "splits": {
+    "train": 1155,
+    "test": 248,
+    "validation": 247
+  },
+  "resolutions": {
+    "300 x 162": 1464,
+    "640 x 161": 186
+  },
+  "classes": [
+    {
+      "target": 0,
+      "name": "Normal (grado 0)",
+      "count": 514
+    },
+    {
+      "target": 1,
+      "name": "Dudosa (grado 1)",
+      "count": 477
+    },
+    {
+      "target": 2,
+      "name": "Leve (grado 2)",
+      "count": 232
+    },
+    {
+      "target": 3,
+      "name": "Moderada (grado 3)",
+      "count": 221
+    },
+    {
+      "target": 4,
+      "name": "Severa (grado 4)",
+      "count": 206
+    }
+  ]
+}

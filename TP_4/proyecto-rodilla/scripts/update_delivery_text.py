@@ -52,7 +52,7 @@ La identidad usa forma y píxeles decodificados, no el nombre del archivo. Se ex
 5. `05_Feature_Engineering.ipynb`: comparación ANOVA y PCA.
 6. `06_Comparacion_Final.ipynb`: selección, reentrenamiento, métricas, límites y despliegue.
 
-Están ejecutados. Para consultar, dejar `RECOMPUTE=False`. Para recalcular, reiniciar el kernel tras actualizar el código, poner `RECOMPUTE=True` y ejecutar en orden. El primer notebook regenera la copia limpia sin borrar originales ni crear copias adicionales.
+Cada etapa contiene código completo, explicación antes de cada celda y salidas guardadas. Para leer en GitHub no hace falta ejecutar nada. Para reconstruir, reiniciar el kernel y ejecutar de arriba hacia abajo los notebooks 01 a 06; las celdas de entrenamiento ajustan los modelos y las curvas pueden tardar varios minutos. El primer notebook regenera la copia limpia sin modificar originales. No hay interruptor RECOMPUTE ni llamadas resumidas a workflow para ocultar los pasos.
 
 ## Instalación y reproducción
 
@@ -66,7 +66,6 @@ python -m venv .venv
 Descargar [Annotated Dataset for Knee Arthritis Detection](https://www.kaggle.com/datasets/hafiznouman786/annotated-dataset-for-knee-arthritis-detection). Colocar las cinco carpetas de grados en `data/raw/Training/`.
 
 ```powershell
-.\\.venv\\Scripts\\python.exe scripts/run_pipeline.py
 .\\.venv\\Scripts\\python.exe scripts/build_notebooks.py
 .\\.venv\\Scripts\\python.exe scripts/execute_notebooks.py
 .\\.venv\\Scripts\\python.exe scripts/build_demo.py
@@ -135,29 +134,5 @@ Los documentos y la implementación no acreditan por sí solos envío en eAula, 
 """
 (R/'README.md').write_text(readme,encoding='utf-8')
 (R/'reports/informe_final.md').write_text(f"# Informe final vigente\n\nEl documento completo está en [informe_final.pdf](informe_final.pdf).\n\nProtocolo `{m['protocol']}`; modelo {m['selected_model']}; F1 macro validación {f['validation_f1']:.4f}; F1 macro test {f['F1 Macro']:.4f}; accuracy {f['Accuracy (%)']:.2f} %. El test ya fue evaluado en v2: reevaluación descriptiva.\n\nEl EDA materializa 1.576 archivos limpios sin modificar los 1.650 originales.\n",encoding='utf-8')
-(R/'presentation/guia_defensa.md').write_text(f"""# Guía de defensa · 8 a 10 minutos
-
-1. Problema: clasificar cinco grados de artrosis; motivación desde procesamiento de imágenes biomédicas.
-2. Datos: 1.650 originales; hashes de píxeles; 6 imágenes contradictorias y 68 copias excluidas; 1.576 únicas.
-3. Mostrar `01_EDA`: ejemplos de duplicados, motivos y copia `data/clean/Training` sin modificar originales.
-4. Preprocesamiento: entrada 256×144, proporción conservada, máscara para estadísticas; 288 variables y SVD sobre 64×36.
-5. Comparación en validación: SVM, Random Forest, XGBoost, logística y SVD; ANOVA y PCA evaluados, no obligatoriamente elegidos.
-6. Elegido: **{m['selected_model']}**, F1 validación **{f['validation_f1']:.4f}**. Reentrenamiento con 1.339 imágenes.
-7. Test descriptivo: accuracy **{f['Accuracy (%)']:.2f} %**, balanced accuracy **{f['Balanced Acc (%)']:.2f} %**, F1 **{f['F1 Macro']:.4f}**. El mismo test ya se evaluó en v2; no hay confirmación independiente.
-8. Mostrar matriz, curvas y errores. Menos relleno no garantiza que mejoren todas las métricas; no seleccionar usando test.
-9. Demo: dashboard local o API. El sitio público muestra diez predicciones precalculadas.
-10. Limitaciones: sin IDs ni cohorte externa, formato asociado al grado, promedio bilateral y probabilidades sin calibración clínica.
-
-## Preguntas probables
-
-**¿Se borraron originales?** No: se generó una copia limpia y un registro de exclusiones.
-
-**¿Detectaron todos los duplicados?** Solo coincidencias exactas de píxeles; recortes y casi duplicados pueden persistir.
-
-**¿Por qué rectangular?** Reduce el relleno artificial y conserva geometría; el cambio de HOG también influye.
-
-**¿Por qué no ANOVA/PCA en el final?** Se comparan por validación, no se fuerzan. La configuración elegida está registrada antes de reevaluar test.
-
-**¿Se puede diagnosticar?** No; es un prototipo académico sin validación clínica o externa.
-""",encoding='utf-8')
-print('README, resumen y guía actualizados desde métricas reales.')
+# Preserve the expanded oral-defense guide instead of replacing it with a summary.
+print('README y resumen actualizados; la guía de defensa se conserva.')

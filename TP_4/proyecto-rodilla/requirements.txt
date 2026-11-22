@@ -20,3 +20,6 @@ httpx==0.28.1
 reportlab
 pypdf
 ipykernel
+
+# Formato legible del código generado en notebooks
+black==26.10.1

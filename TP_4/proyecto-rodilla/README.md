@@ -40,7 +40,7 @@ La identidad usa forma y píxeles decodificados, no el nombre del archivo. Se ex
 5. `05_Feature_Engineering.ipynb`: comparación ANOVA y PCA.
 6. `06_Comparacion_Final.ipynb`: selección, reentrenamiento, métricas, límites y despliegue.
 
-Están ejecutados. Para consultar, dejar `RECOMPUTE=False`. Para recalcular, reiniciar el kernel tras actualizar el código, poner `RECOMPUTE=True` y ejecutar en orden. El primer notebook regenera la copia limpia sin borrar originales ni crear copias adicionales.
+Cada etapa contiene código completo, explicación antes de cada celda y salidas guardadas. Para leer en GitHub no hace falta ejecutar nada. Para reconstruir, reiniciar el kernel y ejecutar de arriba hacia abajo los notebooks 01 a 06; las celdas de entrenamiento ajustan los modelos y las curvas pueden tardar varios minutos. El primer notebook regenera la copia limpia sin modificar originales. No hay interruptor RECOMPUTE ni llamadas resumidas a workflow para ocultar los pasos.
 
 ## Instalación y reproducción
 
@@ -54,7 +54,6 @@ python -m venv .venv
 Descargar [Annotated Dataset for Knee Arthritis Detection](https://www.kaggle.com/datasets/hafiznouman786/annotated-dataset-for-knee-arthritis-detection). Colocar las cinco carpetas de grados en `data/raw/Training/`.
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/run_pipeline.py
 .\.venv\Scripts\python.exe scripts/build_notebooks.py
 .\.venv\Scripts\python.exe scripts/execute_notebooks.py
 .\.venv\Scripts\python.exe scripts/build_demo.py

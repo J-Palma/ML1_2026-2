@@ -9,7 +9,7 @@
     "F1 Weighted": 0.64082,
     "Precision Macro": 0.635643,
     "Recall Macro": 0.632627,
-    "seconds": 0.97
+    "seconds": 0.58
   },
   {
     "Modelo": "XGBoost 200 rondas",
@@ -21,7 +21,7 @@
     "F1 Weighted": 0.634151,
     "Precision Macro": 0.657159,
     "Recall Macro": 0.604372,
-    "seconds": 13.29
+    "seconds": 10.54
   },
   {
     "Modelo": "XGBoost 300 rondas",
@@ -33,7 +33,7 @@
     "F1 Weighted": 0.636708,
     "Precision Macro": 0.653815,
     "Recall Macro": 0.60758,
-    "seconds": 20.37
+    "seconds": 13.85
   },
   {
     "Modelo": "SVM RBF C=50",
@@ -45,7 +45,7 @@
     "F1 Weighted": 0.627764,
     "Precision Macro": 0.627515,
     "Recall Macro": 0.606825,
-    "seconds": 0.79
+    "seconds": 0.66
   },
   {
     "Modelo": "SVM RBF C=10",
@@ -57,7 +57,7 @@
     "F1 Weighted": 0.627305,
     "Precision Macro": 0.622077,
     "Recall Macro": 0.606785,
-    "seconds": 0.78
+    "seconds": 0.65
   },
   {
     "Modelo": "XGBoost 100 rondas",
@@ -69,7 +69,7 @@
     "F1 Weighted": 0.618023,
     "Precision Macro": 0.635046,
     "Recall Macro": 0.588926,
-    "seconds": 6.96
+    "seconds": 5.09
   },
   {
     "Modelo": "Random Forest n=300 hoja=2",
@@ -81,7 +81,7 @@
     "F1 Weighted": 0.599173,
     "Precision Macro": 0.61285,
     "Recall Macro": 0.571167,
-    "seconds": 2.99
+    "seconds": 1.77
   },
   {
     "Modelo": "Random Forest n=200 hoja=1",
@@ -93,7 +93,7 @@
     "F1 Weighted": 0.594966,
     "Precision Macro": 0.615096,
     "Recall Macro": 0.564414,
-    "seconds": 2.33
+    "seconds": 1.31
   },
   {
     "Modelo": "Random Forest n=200 hoja=2",
@@ -105,7 +105,7 @@
     "F1 Weighted": 0.58262,
     "Precision Macro": 0.593924,
     "Recall Macro": 0.563031,
-    "seconds": 2.04
+    "seconds": 1.13
   },
   {
     "Modelo": "Random Forest n=100 hoja=1",
@@ -117,7 +117,7 @@
     "F1 Weighted": 0.555944,
     "Precision Macro": 0.578559,
     "Recall Macro": 0.52522,
-    "seconds": 0.93
+    "seconds": 0.67
   },
   {
     "Modelo": "SVD k=10",

@@ -45,5 +45,34 @@
     "patient_identifiers_available": false,
     "historical_cross_split_duplicate_groups": 30,
     "limitation": "Sin identificadores de paciente; no descarta duplicados aproximados, recortes o vistas del mismo paciente."
-  }
+  },
+  "notebook_format": "full executable code with explanation before every code cell",
+  "notebook_cells": {
+    "01_EDA.ipynb": {
+      "cells": 26,
+      "code_cells": 12
+    },
+    "02_Preprocesamiento.ipynb": {
+      "cells": 33,
+      "code_cells": 16
+    },
+    "03_Baseline.ipynb": {
+      "cells": 17,
+      "code_cells": 8
+    },
+    "04_Modelos_Avanzados.ipynb": {
+      "cells": 26,
+      "code_cells": 12
+    },
+    "05_Feature_Engineering.ipynb": {
+      "cells": 22,
+      "code_cells": 10
+    },
+    "06_Comparacion_Final.ipynb": {
+      "cells": 36,
+      "code_cells": 17
+    }
+  },
+  "notebook_model_binary_identical": true,
+  "notebook_metrics_identical": true
 }

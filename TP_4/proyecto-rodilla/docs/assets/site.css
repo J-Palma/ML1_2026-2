@@ -10,3 +10,6 @@
 .technical-copy{margin-top:32px;max-width:1000px}.section-copy h3{color:var(--navy);margin-top:26px}.section-copy dt{font-weight:700;color:var(--navy);margin-top:16px}.section-copy dd{margin-left:0;margin-bottom:12px}.section-copy li{margin-bottom:8px}.eda-extra{margin-top:24px}section[id]{scroll-margin-top:90px}
 
 .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:24px}.demo-grid img{min-height:160px}select{max-width:100%;padding:10px;border:1px solid #d9e2ec;border-radius:7px}.hero-center{width:200px;height:200px}.hero-center strong:first-child{font-size:38px}section[id]{scroll-margin-top:90px}@media(max-width:800px){.demo-grid{grid-template-columns:1fr}.nav-links{gap:14px}}
+
+/* Keep the selected model legible inside the dark results card. */
+.section-copy .winner-card h3{color:#ffffff}

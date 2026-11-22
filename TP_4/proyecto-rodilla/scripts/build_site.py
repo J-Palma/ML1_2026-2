@@ -1,6 +1,6 @@
 """Publish a static report from the current experiment, with a test-sample demo."""
 from pathlib import Path
-import json,shutil,html,re
+import json,shutil,html,re,hashlib
 R=Path(__file__).resolve().parents[1];S=R/'docs';D=S/'data';D.mkdir(exist_ok=True)
 m=json.loads((R/'reports/modelos_avanzados_metrics.json').read_text(encoding='utf-8'));d=json.loads((R/'reports/dataset_summary.json').read_text(encoding='utf-8'));f=m['final_test'];a=d['audit']
 for x,y in [('modelos_avanzados_metrics.json','model_metrics.json'),('dataset_summary.json','dataset_summary.json'),('learning_curves_summary.json','learning_curves_summary.json')]:shutil.copy2(R/'reports'/x,D/y)
@@ -39,6 +39,10 @@ markup=page.read_text(encoding='utf-8')
 markup=re.sub(r'((?:src|href)="assets/[^"?]+)(")',lambda match:match[1]+'?v='+version+match[2],markup)
 page.write_text(markup,encoding='utf-8')
 p=S/'assets/site.css';s=p.read_text(encoding='utf-8');extra='\n.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:24px}.demo-grid img{min-height:160px}select{max-width:100%;padding:10px;border:1px solid #d9e2ec;border-radius:7px}.hero-center{width:200px;height:200px}.hero-center strong:first-child{font-size:38px}section[id]{scroll-margin-top:90px}@media(max-width:800px){.demo-grid{grid-template-columns:1fr}.nav-links{gap:14px}}\n';p.write_text(s+extra if '.demo-grid{' not in s else s,encoding='utf-8')
+# A style edit must reach returning visitors without changing the ML protocol.
+style_version=hashlib.sha256(p.read_bytes()).hexdigest()[:12]
+page.write_text(page.read_text(encoding='utf-8').replace(
+    'assets/site.css?v='+version,'assets/site.css?v='+style_version),encoding='utf-8')
 print('Sitio construido:',m['protocol'])
 
 # When checked out inside the course repository, update the actual Pages source.

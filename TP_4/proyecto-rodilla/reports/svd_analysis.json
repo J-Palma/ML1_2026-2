@@ -1,0 +1,113 @@
+{
+  "protocol": "rectangular-masked-v3-2026-11-22",
+  "fit_split": "train",
+  "selection_split": "validation",
+  "test_used": false,
+  "selected_k": 10,
+  "selected_validation_f1": 0.462945,
+  "final_model_unchanged": true,
+  "classes": [
+    {
+      "target": 0,
+      "label": "Normal",
+      "train_images": 335,
+      "selected_k": 10,
+      "variance_at_selected_k": 0.7572355471756184,
+      "k_90": 39,
+      "k_95": 74,
+      "gd_rank": 99,
+      "gd_threshold": 19.030360694376892,
+      "gd_beta": 0.14539930555555555,
+      "gd_omega": 1.6824296031138593
+    },
+    {
+      "target": 1,
+      "label": "Dudosa",
+      "train_images": 329,
+      "selected_k": 10,
+      "variance_at_selected_k": 0.6985205021234349,
+      "k_90": 52,
+      "k_95": 95,
+      "gd_rank": 96,
+      "gd_threshold": 21.87989377799894,
+      "gd_beta": 0.1427951388888889,
+      "gd_omega": 1.6783461725131361
+    },
+    {
+      "target": 2,
+      "label": "Leve",
+      "train_images": 153,
+      "selected_k": 10,
+      "variance_at_selected_k": 0.7818287339366803,
+      "k_90": 32,
+      "k_95": 56,
+      "gd_rank": 43,
+      "gd_threshold": 28.761440114103646,
+      "gd_beta": 0.06640625,
+      "gd_omega": 1.549936460772171
+    },
+    {
+      "target": 3,
+      "label": "Moderada",
+      "train_images": 142,
+      "selected_k": 10,
+      "variance_at_selected_k": 0.7789057183109412,
+      "k_90": 30,
+      "k_95": 52,
+      "gd_rank": 40,
+      "gd_threshold": 28.15799397195466,
+      "gd_beta": 0.06163194444444445,
+      "gd_omega": 1.5411786238906628
+    },
+    {
+      "target": 4,
+      "label": "Severa",
+      "train_images": 144,
+      "selected_k": 10,
+      "variance_at_selected_k": 0.6870265757410509,
+      "k_90": 47,
+      "k_95": 73,
+      "gd_rank": 38,
+      "gd_threshold": 33.48865153800307,
+      "gd_beta": 0.0625,
+      "gd_omega": 1.542779392816303
+    }
+  ],
+  "examples": [
+    {
+      "target": 0,
+      "label": "Normal",
+      "validation_index": 0,
+      "reconstruction_rmse": 0.07483221476828177
+    },
+    {
+      "target": 1,
+      "label": "Dudosa",
+      "validation_index": 2,
+      "reconstruction_rmse": 0.07339571064589494
+    },
+    {
+      "target": 2,
+      "label": "Leve",
+      "validation_index": 1,
+      "reconstruction_rmse": 0.07511334608297895
+    },
+    {
+      "target": 3,
+      "label": "Moderada",
+      "validation_index": 7,
+      "reconstruction_rmse": 0.05933308359293081
+    },
+    {
+      "target": 4,
+      "label": "Severa",
+      "validation_index": 3,
+      "reconstruction_rmse": 0.07956987457255355
+    }
+  ],
+  "references": [
+    "https://github.com/carlobeni/Machine-Learning/tree/project-web/models",
+    "https://arxiv.org/abs/1305.5870"
+  ],
+  "limitation": "Gavish-Donoho es un diagnóstico de reconstrucción; hipótesis de ruido blanco no verificadas."
+}

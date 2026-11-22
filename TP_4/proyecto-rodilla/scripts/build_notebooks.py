@@ -6,6 +6,7 @@ or RECOMPUTE switch hides the actual training/cleaning implementation.
 """
 from pathlib import Path
 import ast
+import argparse
 import hashlib
 import json
 import nbformat
@@ -15,8 +16,11 @@ except ImportError:
     black=None
 
 ROOT=Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--notebook',help='Regenerar solo este notebook y conservar los demás.')
+OPTIONS=parser.parse_args()
 MODULES={name:(ROOT/f'src/{name}.py').read_text(encoding='utf-8')
-         for name in ['workflow','data_cleaning','preprocessing','features','models']}
+         for name in ['workflow','data_cleaning','preprocessing','features','models','svd_analysis']}
 TREES={name:ast.parse(source) for name,source in MODULES.items()}
 NODES={name:{node.name:node for node in tree.body if isinstance(node,(ast.FunctionDef,ast.ClassDef))}
        for name,tree in TREES.items()}
@@ -123,6 +127,8 @@ def training_helpers(cells):
 
 
 def write(filename,cells):
+    if OPTIONS.notebook and OPTIONS.notebook != filename:
+        return
     for i,c in enumerate(cells):
         if c.cell_type=='code':
             assert i>0 and cells[i-1].cell_type=='markdown',filename
@@ -131,6 +137,16 @@ def write(filename,cells):
     metadata=dict(kernelspec={'display_name':'Python (proyecto-rodilla)','language':'python','name':'python3'},
         notebook_role='full_executable_walkthrough',source_fingerprints={
             f'src/{name}.py':hashlib.sha256(value.encode()).hexdigest() for name,value in MODULES.items()})
+    # Keep real outputs when a cell's source is unchanged. Adding an explained
+    # diagnostic must not erase the executions of the other five notebooks.
+    path=ROOT/'notebooks'/filename
+    old=nbformat.read(path,as_version=4) if path.exists() else None
+    existing={cell.source:cell for cell in old.cells if cell.cell_type=='code'} if old else {}
+    for cell in cells:
+        if cell.cell_type=='code' and cell.source in existing:
+            previous=existing[cell.source]
+            cell.outputs=previous.outputs
+            cell.execution_count=previous.execution_count
     n=nbformat.v4.new_notebook(cells=cells,metadata=metadata)
     nbformat.validate(n);nbformat.write(n,ROOT/'notebooks'/filename)
     print(filename,':',len(cells),'celdas;',sum(c.cell_type=='code' for c in cells),'con código')
@@ -251,6 +267,58 @@ section(c,'12. Comparar rangos del subespacio',
     'Se evalúan k=5,10,20,30,50 sin ajustar con validación. La clase predicha minimiza la norma residual; las probabilidades softmax de este clasificador no son una calibración clínica.',pieces('advanced',10,13))
 section(c,'13. Guardar la comparación completa',
     'Se reúnen los quince candidatos avanzados, se ordenan por F1 de validación y se conservan los objetos ajustados para la selección posterior.',pieces('advanced',13,16)+"\ndisplay(table)")
+section(c,'14. Espectros completos y umbral de Gavish-Donoho',
+    'Se muestra el código completo del análisis adicional. El escalador, las medias y las bases se ajustan solo con train. '
+    'Gavish-Donoho calcula un umbral para reconstrucción bajo hipótesis de bajo rango y ruido blanco; no es un óptimo de clasificación. '
+    'Se obtiene beta por separado para cada grado, porque sus cantidades de ejemplos son distintas.',
+    'from scipy.integrate import quad\nfrom scipy.optimize import brentq\n'
+    +definition('svd_analysis','gavish_donoho_threshold')+definition('svd_analysis','fit_svd_diagnostics'))
+section(c,'15. Resumen cuantitativo y rango elegido con validación',
+    'Se reutilizan los resultados del barrido k=5,10,20,30,50. No se crea una nueva búsqueda ni se consulta test. '
+    'La tabla informa cuánta varianza conserva el k elegido y qué rangos alcanzan 90 % y 95 %. '
+    'La suma normalizada de valores singulares se distingue de la energía cuadrática: esta última coincide con la varianza acumulada de las matrices centradas.',
+    '''svd_validation=pd.read_json(REPORTS/'advanced_validation.json')
+svd_validation=svd_validation[svd_validation.family=='SVD'].sort_values('F1 Macro',ascending=False,kind='stable')
+selected_k=int(svd_validation.iloc[0].Modelo.split('k=')[1])
+diagnostic_scaler,svd_classes,svd_summary=fit_svd_diagnostics(a['X_train_flat'],a['y_train'],LABELS,selected_k)
+svd_summary.to_csv(REPORTS/'svd_diagnostics.csv',index=False)
+display(svd_validation[['Modelo','F1 Macro','Accuracy (%)']])
+display(svd_summary)
+print('SVD elegido:',selected_k,'componentes. El modelo final sigue siendo SVM RBF C=1.')''')
+section(c,'16. Valores singulares, acumulación y F1 frente a k',
+    'El índice comienza en 1. Las curvas espectrales usan exclusivamente entrenamiento; el último panel muestra F1 macro de validación. '
+    'Conservar más varianza no garantiza separar mejor las clases. Se señala k elegido por F1, aunque no alcance el 90 % de varianza. '
+    'Tras centrar n imágenes, el rango no supera n-1; el último valor casi nulo no es evidencia de un corte anatómico o de ruido.',
+    definition('svd_analysis','plot_svd_selection')+"\nplot_svd_selection(svd_classes,LABELS,svd_validation,selected_k)\nfigure('svd_seleccion_dimension.png')")
+section(c,'17. Interpretar el truncamiento teórico por grado',
+    'Se compara el rango teórico de Gavish-Donoho con el k elegido por validación. '
+    'Las hipótesis del teorema no se verificaron en estos datos: la estandarización y el centrado afectan el ruido. '
+    'El umbral se presenta como diagnóstico complementario y no cambia los parámetros entrenados.',
+    definition('svd_analysis','plot_gavish_donoho')+"\nplot_gavish_donoho(svd_classes,LABELS,selected_k)\nfigure('svd_gavish_donoho.png')")
+section(c,'18. Medias, modos y reconstrucciones de radiografías',
+    'Se utiliza el primer ejemplo de validación de cada grado, sin elegir el más favorable. '
+    'La media y la reconstrucción vuelven a unidades originales mediante inverse_transform. '
+    'Los modos tienen signo arbitrario y están en coordenadas estandarizadas; no representan lesiones. '
+    'Se reconstruye con la base de su etiqueta conocida solo para ilustrar geometría, no para medir exactitud. '
+    'La inferencia real compara los cinco residuos sin conocer la etiqueta.',
+    definition('svd_analysis','plot_svd_reconstructions')+'''
+_,svd_examples=plot_svd_reconstructions(diagnostic_scaler,svd_classes,a['X_val_flat'],a['y_val'],LABELS,selected_k)
+figure('svd_componentes_reconstruccion.png')
+display(pd.DataFrame(svd_examples))
+save_json(REPORTS/'svd_analysis.json',dict(protocol=PROTOCOL,fit_split='train',selection_split='validation',test_used=False,
+    selected_k=selected_k,selected_validation_f1=float(svd_validation.iloc[0]['F1 Macro']),
+    final_model_unchanged=True,classes=svd_summary.to_dict(orient='records'),examples=svd_examples,
+    references=['https://github.com/carlobeni/Machine-Learning/tree/project-web/models','https://arxiv.org/abs/1305.5870'],
+    limitation='Gavish-Donoho es un diagnóstico de reconstrucción; hipótesis de ruido blanco no verificadas.'))
+''')
+c.append(nbformat.v4.new_markdown_cell('## 19. Cómo explicar el análisis en la defensa\n\n'
+    'El SVD comparado construye cinco subespacios sobre 2.304 píxeles. Sus curvas resumen la estructura de train. '
+    'k=10 se eligió por F1 macro de validación entre cinco candidatos, no por inspección de test ni por un umbral fijo de varianza. '
+    'Gavish-Donoho aborda reconstrucción bajo un modelo de ruido; no obliga a usar ese rango para clasificar. '
+    'Estos gráficos explican el modelo SVD comparado; el pipeline final continúa con 288 descriptores, StandardScaler y SVM RBF C=1.\n\n'
+    'Referencias: [ejemplo de la cátedra](https://github.com/carlobeni/Machine-Learning/tree/project-web/models), '
+    '[Gavish y Donoho](https://arxiv.org/abs/1305.5870), '
+    '[NumPy SVD](https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html).'))
 write('04_Modelos_Avanzados.ipynb',c)
 
 

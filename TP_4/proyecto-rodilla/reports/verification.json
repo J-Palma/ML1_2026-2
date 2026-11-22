@@ -61,8 +61,8 @@
       "code_cells": 8
     },
     "04_Modelos_Avanzados.ipynb": {
-      "cells": 26,
-      "code_cells": 12
+      "cells": 37,
+      "code_cells": 17
     },
     "05_Feature_Engineering.ipynb": {
       "cells": 22,
@@ -74,5 +74,22 @@
     }
   },
   "notebook_model_binary_identical": true,
-  "notebook_metrics_identical": true
+  "notebook_metrics_identical": true,
+  "svd_analysis": {
+    "fit_split": "train",
+    "selection_split": "validation",
+    "test_used": false,
+    "selected_k": 10,
+    "selected_validation_f1": 0.462945,
+    "checks": [
+      "projection predictions identical to stored train-fitted SVD k=10 on all validation samples",
+      "orthonormal bases and normalized cumulative variance",
+      "square-matrix Gavish-Donoho coefficient 2.85836",
+      "all new notebook cells executed without errors",
+      "final model, metrics and selection decision hashes unchanged"
+    ],
+    "figures_reviewed": 3,
+    "defense_questions": 112,
+    "defense_pdf_pages": 25
+  }
 }

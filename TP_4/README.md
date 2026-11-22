@@ -26,8 +26,12 @@ Cada cuaderno incluye explicación antes de cada celda, código ejecutable compl
 | 01 EDA y limpieza | 12 |
 | 02 Preprocesamiento | 16 |
 | 03 Baseline | 8 |
-| 04 Modelos avanzados | 12 |
+| 04 Modelos avanzados | 17 |
 | 05 Feature engineering | 10 |
 | 06 Comparación final | 17 |
 
 Las celdas de entrenamiento vuelven a ajustar los modelos; las curvas de aprendizaje pueden tardar varios minutos.
+
+## Análisis SVD ampliado
+
+El notebook 04 incorpora espectros por grado, varianza, selección de k con validación, Gavish-Donoho y reconstrucciones. La [preparación de defensa](proyecto-rodilla/presentation/preparacion_defensa_completa.pdf) incluye 112 preguntas y un anexo visual. El SVM final y sus métricas no cambian.

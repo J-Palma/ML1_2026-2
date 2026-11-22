@@ -108,11 +108,23 @@ Las pruebas verifican duplicados con compresiones distintas, conflictos entre et
 - `reports/informe_parcial1.pdf`: resumen retrospectivo; no acredita entrega anterior.
 - `presentation/slides.pdf`: 14 diapositivas vigentes.
 - `presentation/guia_defensa.md`: guion y preguntas para la defensa.
+- `presentation/preparacion_defensa_completa.pdf`: guía ampliada con 112 preguntas y anexo SVD.
 - `models/best_model.joblib`: pipeline final serializado.
 - `models/hyperparameters.json`: configuración del modelo y extractor.
 - `reports/`: métricas, gráficos, auditoría y comparación de versiones.
 
 Las carpetas de imágenes, entorno virtual y matrices no se versionan. Los manifiestos permiten reconstruir la copia limpia descargando los originales de Kaggle. El ZIP de entrega incluye diez muestras para la demo.
+
+## Análisis SVD de referencia
+
+El notebook 04 incluye código explicado y ejecutado de valores singulares, suma normalizada, varianza acumulada, F1 de validación frente a k, umbral de Gavish-Donoho por grado y medias/modos/reconstrucciones. Las bases se estiman solo con train y la selección conserva k=10, F1 macro de validación 0,4629. Los resultados están en `reports/svd_analysis.json`, `reports/svd_diagnostics.csv` y tres figuras `svd_*.png`.
+
+Gavish-Donoho es un criterio de reconstrucción bajo hipótesis de ruido no verificadas, y no reemplaza la selección del clasificador. El pipeline final continúa con StandardScaler y SVM RBF C=1, sin SVD. La guía de defensa incluye cómo explicar esta diferencia y doce preguntas adicionales.
+
+```powershell
+.\\.venv\\Scripts\\python.exe scripts/update_svd_defense.py
+.\\.venv\\Scripts\\python.exe scripts/build_defense_guide.py
+```
 
 ## Docker
 

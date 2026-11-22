@@ -1,105 +1,75 @@
-"""Feature extraction shared by notebooks, the prediction API, and dashboard."""
-
+"""Rectangular, geometry-preserving descriptors shared by training and inference."""
 from __future__ import annotations
-
 import cv2
 import numpy as np
+from src.preprocessing import DEFAULT_VIEW_SIZE, preprocess_view, resize_with_padding, split_bilateral
 
-from src.preprocessing import preprocess_view, split_bilateral
+FEATURE_COUNT = 288
+HOG_SIZE = (96, 160)
+FLAT_SIZE = (36, 64)
+PREPROCESSING_SPEC = dict(version='rectangular-masked-v3', view_size=list(DEFAULT_VIEW_SIZE),
+    hog_size=list(HOG_SIZE), flat_size=list(FLAT_SIZE), masked_statistics=True,
+    clahe_clip_limit=1.5, bilateral_width_threshold=500)
 
 
 def compute_hog_features(gray_img: np.ndarray, cell_size: int = 32, n_bins: int = 8) -> np.ndarray:
-    """Compute the project's normalized 2x2-cell Dalal-Triggs HOG descriptor."""
+    """Normalized 2x2-cell HOG; 96x160 gives 256 descriptors with 32px cells."""
     gx = cv2.Sobel(gray_img, cv2.CV_32F, 1, 0, ksize=3)
     gy = cv2.Sobel(gray_img, cv2.CV_32F, 0, 1, ksize=3)
     magnitude, angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
     angle %= 180.0
-    bin_width = 180.0 / n_bins
-    bin_index = np.floor(angle / bin_width).astype(np.int32) % n_bins
-    n_cells_y = gray_img.shape[0] // cell_size
-    n_cells_x = gray_img.shape[1] // cell_size
-    hist_grid = np.zeros((n_cells_y, n_cells_x, n_bins), dtype=np.float32)
-
-    for y in range(n_cells_y):
-        for x in range(n_cells_x):
-            ys = slice(y * cell_size, (y + 1) * cell_size)
-            xs = slice(x * cell_size, (x + 1) * cell_size)
-            cell_mag = magnitude[ys, xs]
-            cell_bin = bin_index[ys, xs]
-            for bin_id in range(n_bins):
-                hist_grid[y, x, bin_id] = np.sum(cell_mag[cell_bin == bin_id])
-
-    blocks = []
-    for y in range(n_cells_y - 1):
-        for x in range(n_cells_x - 1):
-            block = hist_grid[y:y + 2, x:x + 2, :].flatten()
-            blocks.append(block / (np.linalg.norm(block) + 1e-6))
+    bins = np.floor(angle / (180.0 / n_bins)).astype(np.int32) % n_bins
+    ny, nx = gray_img.shape[0] // cell_size, gray_img.shape[1] // cell_size
+    hist_grid = np.zeros((ny, nx, n_bins), dtype=np.float32)
+    for y in range(ny):
+        for x in range(nx):
+            ys, xs = slice(y*cell_size, (y+1)*cell_size), slice(x*cell_size, (x+1)*cell_size)
+            for b in range(n_bins):
+                hist_grid[y,x,b] = np.sum(magnitude[ys,xs][bins[ys,xs] == b])
+    blocks=[]
+    for y in range(ny-1):
+        for x in range(nx-1):
+            block=hist_grid[y:y+2,x:x+2,:].flatten()
+            blocks.append(block / (np.linalg.norm(block)+1e-6))
     return np.concatenate(blocks) if blocks else hist_grid.flatten()
 
 
-def extract_single_knee_features(image_gray: np.ndarray, target_size=(256, 256)) -> tuple[dict, np.ndarray, np.ndarray]:
-    """Return one ordered 320-feature dictionary, preview, and flat pixels."""
-    enhanced = preprocess_view(image_gray, target_size)
-    pixels = enhanced.astype(np.float32)
-
-    features = {
-        "intensity_mean": float(np.mean(pixels)),
-        "intensity_std": float(np.std(pixels)),
-        "intensity_median": float(np.median(pixels)),
-        "intensity_p25": float(np.percentile(pixels, 25)),
-        "intensity_p75": float(np.percentile(pixels, 75)),
-    }
-
-    hist = cv2.calcHist([enhanced], [0], None, [16], [0, 256]).flatten()
-    hist /= np.sum(hist) + 1e-6
-
-    sobel_x = cv2.Sobel(enhanced, cv2.CV_64F, 1, 0, ksize=3)
-    sobel_y = cv2.Sobel(enhanced, cv2.CV_64F, 0, 1, ksize=3)
-    grad_mag = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
-    features.update({
-        "grad_mean": float(np.mean(grad_mag)),
-        "grad_std": float(np.std(grad_mag)),
-        "laplacian_var": float(cv2.Laplacian(enhanced, cv2.CV_64F).var()),
-    })
-
-    features.update({f"hist_bin_{i}": float(hist[i]) for i in range(16)})
-
-    half_h, half_w = target_size[0] // 2, target_size[1] // 2
-    quadrant_names = ("top_left", "top_right", "bottom_left", "bottom_right")
-    quadrant_coords = ((0, 0), (0, 1), (1, 0), (1, 1))
-    for name, (row, col) in zip(quadrant_names, quadrant_coords):
-        quadrant = enhanced[row * half_h:(row + 1) * half_h, col * half_w:(col + 1) * half_w]
-        features[f"{name}_mean"] = float(np.mean(quadrant))
-        features[f"{name}_std"] = float(np.std(quadrant))
-
-    gray_128 = cv2.resize(enhanced, (128, 128), interpolation=cv2.INTER_AREA)
-    hog = compute_hog_features(gray_128, cell_size=32, n_bins=8)
-    features.update({f"hog_{i}": float(value) for i, value in enumerate(hog)})
-    if len(features) != 320:
-        raise ValueError(f"Expected 320 features, got {len(features)}")
-    img_64 = cv2.resize(enhanced, (64, 64), interpolation=cv2.INTER_AREA)
-    flat = (img_64.astype(np.float32) / 255.0).flatten()
+def extract_single_knee_features(image_gray: np.ndarray, target_size=DEFAULT_VIEW_SIZE):
+    """Exclude added padding from statistics; preserve the whole source field."""
+    enhanced, mask = preprocess_view(image_gray, target_size, return_mask=True)
+    pixels = enhanced[mask > 0]
+    features = dict(intensity_mean=float(np.mean(pixels)), intensity_std=float(np.std(pixels)),
+        intensity_median=float(np.median(pixels)), intensity_p25=float(np.percentile(pixels,25)),
+        intensity_p75=float(np.percentile(pixels,75)))
+    sx=cv2.Sobel(enhanced,cv2.CV_64F,1,0,ksize=3)
+    sy=cv2.Sobel(enhanced,cv2.CV_64F,0,1,ksize=3)
+    inner=cv2.erode(mask,np.ones((3,3),np.uint8)) > 0
+    grad=np.hypot(sx,sy)[inner]
+    lap=cv2.Laplacian(enhanced,cv2.CV_64F)[inner]
+    features.update(grad_mean=float(np.mean(grad)),grad_std=float(np.std(grad)),laplacian_var=float(np.var(lap)))
+    hist=cv2.calcHist([enhanced],[0],mask,[16],[0,256]).flatten()
+    hist/=hist.sum()+1e-6
+    features.update({f'hist_bin_{i}':float(v) for i,v in enumerate(hist)})
+    hh, hw=target_size[0]//2,target_size[1]//2
+    for name,(r,c) in zip(['top_left','top_right','bottom_left','bottom_right'],[(0,0),(0,1),(1,0),(1,1)]):
+        q=enhanced[r*hh:(r+1)*hh,c*hw:(c+1)*hw]
+        qm=mask[r*hh:(r+1)*hh,c*hw:(c+1)*hw]
+        values=q[qm > 0]
+        if not values.size: raise ValueError('El cuadrante no contiene píxeles de la imagen.')
+        features[f'{name}_mean']=float(np.mean(values));features[f'{name}_std']=float(np.std(values))
+    hog_image=resize_with_padding(enhanced,HOG_SIZE)
+    features.update({f'hog_{i}':float(v) for i,v in enumerate(compute_hog_features(hog_image))})
+    if len(features)!=FEATURE_COUNT: raise ValueError(f'Expected {FEATURE_COUNT} features, got {len(features)}')
+    flat=(resize_with_padding(enhanced,FLAT_SIZE).astype(np.float32)/255.0).flatten()
     return features, enhanced, flat
 
 
-def extract_image_features(image_gray: np.ndarray, target_size=(256, 256)) -> tuple[dict, np.ndarray, np.ndarray]:
-    """Extract features, preview, and flat pixels; average bilateral views."""
-    view_features = []
-    flat_features = []
-    conditioned_views = []
-    for view in split_bilateral(image_gray):
-        feature_dict, conditioned, flat = extract_single_knee_features(view, target_size)
-        view_features.append(feature_dict)
-        flat_features.append(flat)
-        conditioned_views.append(conditioned)
-
-    if len(view_features) == 1:
-        averaged_features = view_features[0]
-    else:
-        averaged_features = {
-            name: float((view_features[0][name] + view_features[1][name]) / 2.0)
-            for name in view_features[0]
-        }
-    flat_average = np.mean(np.stack(flat_features), axis=0, dtype=np.float32)
-    preview = np.hstack(conditioned_views) if len(conditioned_views) == 2 else conditioned_views[0]
-    return averaged_features, preview, flat_average
+def extract_image_features(image_gray: np.ndarray, target_size=DEFAULT_VIEW_SIZE):
+    """Average descriptors per study; never propagate study labels to new rows."""
+    items=[extract_single_knee_features(view,target_size) for view in split_bilateral(image_gray)]
+    names=list(items[0][0])
+    values=np.mean(np.array([list(x[0].values()) for x in items]),axis=0)
+    features={name:float(v) for name,v in zip(names,values)}
+    preview=np.hstack([x[1] for x in items])
+    flat=np.mean(np.stack([x[2] for x in items]),axis=0,dtype=np.float32)
+    return features, preview, flat

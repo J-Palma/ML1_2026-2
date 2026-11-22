@@ -1,7 +1,7 @@
 # Revisión de entrega
 
-El portal cubre portada académica, problema y objetivos, auditoría/EDA, preprocesamiento, selección/reducción dimensional, modelado, evaluación, discusión, conclusiones y demo.
+Los seis notebooks están ejecutados con el protocolo rectangular-masked-v3-2026-11-22. El EDA incluye inventario, hashes de píxeles, conflictos, exclusiones, copia limpia y particiones. El preprocesamiento usa 256×144, máscara de relleno y 288 variables. El modelo, la API, el dashboard, las métricas, el informe y las diapositivas comparten versión.
 
-La entrega final agrega API FastAPI comprobada, dashboard Streamlit probado, modelo serializado con transformaciones, parámetros, seis notebooks, informe PDF y 14 diapositivas. Registro: `proyecto-rodilla/reports/verification.json`.
+Cinco pruebas de integración y Streamlit AppTest pasaron. El test se había evaluado en v2: la reevaluación es descriptiva, no confirmación independiente. Registro: proyecto-rodilla/reports/verification.json.
 
-No se acredita defensa oral, envío en eAula, ni cumplimiento de todos los TPs/cuestionarios. Dockerfile incluido; imagen Docker no construida por ausencia del ejecutable. La validación por paciente y externa no está disponible y se declara como limitación.
+La carpeta de originales se conserva; data/clean/Training se genera localmente y no se versiona. Los manifiestos y exclusiones sí se incluyen. Dockerfile incluido, sin construir por ausencia de Docker. El proyecto no acredita defensa oral, envío en eAula ni otros TPs/cuestionarios.

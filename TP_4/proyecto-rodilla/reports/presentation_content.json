@@ -18,17 +18,17 @@
   },
   {
     "title": "Acondicionamiento y representación",
-    "body": "Proporción conservada, CLAHE y promedio de vistas bilaterales.\n320 descriptores: intensidad, histogramas, gradientes y 288 HOG.\nLa etiqueta y la predicción corresponden al estudio; se pierde lateralidad.",
+    "body": "Proporción conservada, CLAHE y promedio de vistas bilaterales.\n256×144 con máscara; 288 descriptores (256 HOG).\nLa etiqueta y la predicción corresponden al estudio; se pierde lateralidad.",
     "image": "acondicionamiento_radiografias.png"
   },
   {
     "title": "Selección y reducción dimensional",
-    "body": "ANOVA: 40, 80 y 160 variables. PCA: 32, 64 y 128 componentes.\nTransformaciones ajustadas en train y alternativas comparadas con validación.\nElegido: SVM RBF con 160 variables ANOVA.",
+    "body": "ANOVA: 40, 80 y 160 variables. PCA: 32, 64 y 128 componentes.\nTransformaciones ajustadas en train y comparadas con validación.\nElegido: SVM RBF C=1.",
     "image": "feature_engineering_summary.png"
   },
   {
     "title": "Protocolo de evaluación",
-    "body": "Búsqueda y decisión final exclusivamente con validación.\nReentrenamiento del elegido con 1.339 imágenes (train + validation).\nDespués se calcula el test reservado.\nCurvas: 3 folds dentro de train; no equivalen a validación externa."
+    "body": "Búsqueda y decisión final exclusivamente con validación.\nReentrenamiento del elegido con 1.339 imágenes (train + validation).\nSe reevalúa el mismo test de v2; no es confirmación independiente.\nCurvas: 3 folds dentro de train; no equivalen a validación externa."
   },
   {
     "title": "Modelos evaluados",
@@ -42,39 +42,39 @@
         "F1 test"
       ],
       [
-        "SVM ANOVA160 C=10",
-        "0.5881",
-        "73.00%",
-        "71.85%",
-        "0.7207"
+        "SVM RBF C=1",
+        "0.6300",
+        "71.31%",
+        "72.09%",
+        "0.7155"
       ],
       [
-        "XGBoost 300 rondas",
-        "0.5565",
-        "71.73%",
-        "68.34%",
-        "0.6847"
+        "XGBoost 200 rondas",
+        "0.6171",
+        "72.57%",
+        "70.37%",
+        "0.7085"
+      ],
+      [
+        "Logística C=0.01",
+        "0.5500",
+        "66.67%",
+        "69.21%",
+        "0.6722"
       ],
       [
         "Random Forest n=300 hoja=2",
-        "0.5438",
-        "67.09%",
-        "63.12%",
-        "0.6436"
-      ],
-      [
-        "Logística C=0.1",
-        "0.5630",
-        "65.40%",
-        "64.01%",
-        "0.6267"
+        "0.5729",
+        "67.51%",
+        "66.81%",
+        "0.6627"
       ],
       [
         "SVD k=10",
-        "0.4931",
-        "59.07%",
-        "56.59%",
-        "0.5645"
+        "0.4629",
+        "56.12%",
+        "53.81%",
+        "0.5358"
       ],
       [
         "Dummy mayoritaria",
@@ -87,7 +87,7 @@
   },
   {
     "title": "Resultados de test",
-    "body": "Elegido por validación: SVM ANOVA160 C=10.\nAccuracy 73.00% · F1 macro 0.7207.\nBalanced accuracy 71.85% · kappa cuadrático 0.8485.",
+    "body": "Elegido por validación: SVM RBF C=1.\nAccuracy 71.31% · F1 macro 0.7155.\nBalanced accuracy 72.09% · kappa cuadrático 0.8567.",
     "image": "comparacion_modelos.png"
   },
   {
@@ -97,7 +97,7 @@
   },
   {
     "title": "Sobreajuste y límites del aprendizaje",
-    "body": "SVM ANOVA160 C=10: train 0.995, CV 0.566. XGBoost 300 rondas: train 1.000, CV 0.553.\nLa brecha indica riesgo de sobreajuste.",
+    "body": "SVM RBF C=1: train 0.883, CV 0.571. XGBoost 200 rondas: train 1.000, CV 0.596.\nLa brecha indica riesgo de sobreajuste.",
     "image": "modelos_avanzados_learning_curves.png"
   },
   {
@@ -110,6 +110,6 @@
   },
   {
     "title": "Conclusiones",
-    "body": "La auditoría de datos precede a la evaluación.\nSVM con 160 variables fue elegido por validación; F1 test 0.7207.\nSe entrega un pipeline reproducible, interpretación y demo funcional.\nUso académico: no utilizar para diagnóstico.\nRepositorio: github.com/J-Palma/ML1_2026-2"
+    "body": "La auditoría de datos precede a la evaluación.\nSVM RBF C=1 fue elegido por validación; F1 test 0.7155.\nSe entrega un pipeline reproducible, interpretación y demo funcional.\nUso académico: no utilizar para diagnóstico.\nRepositorio: github.com/J-Palma/ML1_2026-2"
   }
 ]

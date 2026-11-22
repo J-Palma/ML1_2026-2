@@ -26,7 +26,8 @@ from sklearn.metrics import (accuracy_score, balanced_accuracy_score, f1_score,
     precision_score, recall_score, classification_report, confusion_matrix,
     ConfusionMatrixDisplay, roc_curve, auc, cohen_kappa_score)
 from xgboost import XGBClassifier
-from src.features import extract_image_features
+from src.features import extract_image_features, FEATURE_COUNT, PREPROCESSING_SPEC
+from src.data_cleaning import audit_dataset, materialize_clean_dataset
 from src.models import SVDSubspaceClassifier
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,7 +37,7 @@ FIGURES = REPORTS/'figures'
 MODELS = ROOT/'models'
 LABELS = ['Normal', 'Dudosa', 'Leve', 'Moderada', 'Severa']
 SEED = 42
-PROTOCOL = 'deduplicated-v2-2026-11-22'
+PROTOCOL = 'rectangular-masked-v3-2026-11-22'
 for folder in [DATA, REPORTS, FIGURES, MODELS]: folder.mkdir(parents=True, exist_ok=True)
 
 
@@ -58,26 +59,13 @@ def figure(name):
 
 def prepare_data():
     """Audit every raw image, quarantine conflicts, deduplicate and split anew."""
-    rows = []
-    for p in sorted((ROOT/'data/raw/Training').rglob('*')):
-        if p.suffix.lower() not in {'.png', '.jpg', '.jpeg'}: continue
-        im = cv2.imread(str(p), cv2.IMREAD_GRAYSCALE)
-        if im is None: raise ValueError(f'Imagen ilegible: {p}')
-        target = int(p.parent.name[0]); h,w = im.shape
-        digest = hashlib.sha256(str(im.shape).encode()+im.tobytes()).hexdigest()
-        rows.append(dict(path=p.relative_to(ROOT).as_posix(), class_name=p.parent.name,
-            class_label=LABELS[target], target=target, width=w, height=h,
-            resolution=f'{w} x {h}', pixel_sha256=digest))
-    df = pd.DataFrame(rows)
-    if df.empty: raise FileNotFoundError('Colocá el dataset en data/raw/Training/<clase>/*.png')
-    conflicts = df.groupby('pixel_sha256').target.nunique()
-    bad = set(conflicts[conflicts>1].index)
-    df['audit_status'] = 'included'
-    df.loc[df.pixel_sha256.isin(bad),'audit_status']='conflicting_label'
-    eligible = df[~df.pixel_sha256.isin(bad)]
-    repeated = eligible.index[eligible.duplicated('pixel_sha256', keep='first')]
-    df.loc[repeated,'audit_status']='duplicate_copy'
+    df = audit_dataset(ROOT)
+    bad = set(df.loc[df.audit_status=='conflicting_label', 'pixel_sha256'])
+    clean_files = materialize_clean_dataset(df, ROOT)
     clean = df[df.audit_status=='included'].copy()
+    clean['clean_path'] = clean.pixel_sha256.map(clean_files.set_index('pixel_sha256').clean_path)
+    df['clean_path'] = df.pixel_sha256.map(clean_files.set_index('pixel_sha256').clean_path).fillna('')
+    df[df.audit_status!='included'].to_csv(ROOT/'data/excluded_images.csv',index=False)
     strata = clean.class_name.astype(str)+'_'+clean.resolution
     train,temp = train_test_split(clean,test_size=.30,stratify=strata,random_state=SEED)
     validation,test = train_test_split(temp,test_size=.50,stratify=temp.class_name.astype(str)+'_'+temp.resolution,random_state=SEED)
@@ -95,6 +83,7 @@ def prepare_data():
         duplicate_groups=int((df.groupby('pixel_sha256').size()>1).sum()),
         conflicting_label_groups=len(bad),excluded_conflicting_images=int((df.audit_status=='conflicting_label').sum()),
         removed_duplicate_copies=int((df.audit_status=='duplicate_copy').sum()),
+        clean_dataset_directory='data/clean/Training',clean_images_written=len(clean_files),raw_images_modified=False,
         cross_split_exact_duplicates=0,patient_identifiers_available=False,
         historical_cross_split_duplicate_groups=30,
         limitation='Sin identificadores de paciente; no descarta duplicados aproximados, recortes o vistas del mismo paciente.')
@@ -120,28 +109,33 @@ def prepare_data():
 def extract():
     manifest=pd.read_csv(DATA/'dataset_splits.csv');features=[];flats=[]
     for r in manifest.itertuples():
-        f,_,flat=extract_image_features(cv2.imread(str(ROOT/r.path),0));features.append(list(f.values()));flats.append(flat)
+        f,_,flat=extract_image_features(cv2.imread(str(ROOT/r.clean_path),0));features.append(list(f.values()));flats.append(flat)
     X=np.asarray(features,dtype=np.float32);flat=np.asarray(flats,dtype=np.float32);y=manifest.target.to_numpy()
     names=list(f)
-    assert X.shape==(len(manifest),320) and np.isfinite(X).all() and np.isfinite(flat).all()
-    payload={'feature_names':np.array(names)}
+    assert X.shape==(len(manifest),FEATURE_COUNT) and np.isfinite(X).all() and np.isfinite(flat).all()
+    payload={'feature_names':np.array(names),'protocol':np.array(PROTOCOL)}
     for label,key in [('train','train'),('validation','val'),('test','test')]:
         mask=(manifest.split_final==label).to_numpy();payload[f'X_{key}_tabular']=X[mask];payload[f'X_{key}_flat']=flat[mask];payload[f'y_{key}']=y[mask]
     np.savez_compressed(DATA/'features_arrays.npz',**payload)
     save_json(DATA/'feature_names.json',names)
+    save_json(REPORTS/'preprocessing_spec.json',PREPROCESSING_SPEC)
     out=pd.DataFrame(X,columns=names);pd.concat([manifest,out],axis=1).to_csv(DATA/'features_dataset.csv',index=False)
     fig,axes=plt.subplots(3,2,figsize=(10,7))
     for i,row in enumerate(manifest.groupby('target').first().reset_index().iloc[[0,2,4]].itertuples()):
         image=cv2.imread(str(ROOT/row.path),0);_,preview,_=extract_image_features(image)
         axes[i,0].imshow(image,cmap='gray',vmin=0,vmax=255);axes[i,1].imshow(preview,cmap='gray',vmin=0,vmax=255)
-        axes[i,0].set_title(f'Original: {LABELS[row.target]}');axes[i,1].set_title('Entrada del extractor: proporción + CLAHE')
+        axes[i,0].set_title(f'Original: {LABELS[row.target]}');axes[i,1].set_title('Entrada real: 256×144 + máscara + CLAHE')
         axes[i,0].axis('off');axes[i,1].axis('off')
     plt.tight_layout();figure('acondicionamiento_radiografias.png')
     print('Matrices:',{k:list(v.shape) for k,v in payload.items() if k.startswith('X_')})
     return pd.DataFrame(X,columns=names)
 
 
-def arrays(): return np.load(DATA/'features_arrays.npz')
+def arrays():
+    payload=np.load(DATA/'features_arrays.npz')
+    if 'protocol' not in payload or str(payload['protocol'])!=PROTOCOL:
+        raise ValueError('Matrices de otra versión; ejecutar antes el preprocesamiento.')
+    return payload
 
 
 def svc(C=10): return SVC(C=C,kernel='rbf',class_weight='balanced',probability=True,random_state=SEED)
@@ -220,7 +214,8 @@ def evaluate():
     validation.to_csv(REPORTS/'validation_comparison.csv',index=False)
     winner=validation.iloc[0];chosen=winner.Modelo
     # Freeze this decision BEFORE reading test predictions/metrics.
-    save_json(REPORTS/'selection_decision.json',dict(protocol=PROTOCOL,selected_model=chosen,selection_metric='F1 macro validation',validation_f1=float(winner['F1 Macro']),test_used_for_selection=False))
+    save_json(REPORTS/'selection_decision.json',dict(protocol=PROTOCOL,selected_model=chosen,selection_metric='F1 macro validation',validation_f1=float(winner['F1 Macro']),test_used_for_selection=False,test_previously_evaluated=True,
+        evaluation_note='Reevaluación descriptiva del mismo test tras cambiar preprocesamiento; no es un nuevo test independiente.'))
     family_winners=validation.drop_duplicates('family')
     test_rows=[];predictions={};final_models={}
     for row in family_winners.itertuples():
@@ -236,7 +231,7 @@ def evaluate():
     joblib.dump(final,MODELS/'best_model.joblib')
     selected_features=a['feature_names'].tolist()
     if isinstance(final,Pipeline) and 'select' in final.named_steps:selected_features=np.array(selected_features)[final.named_steps['select'].get_support()].tolist()
-    hyper=dict(protocol=PROTOCOL,name=chosen,input_features=320,selected_features=selected_features,
+    hyper=dict(protocol=PROTOCOL,name=chosen,input_features=FEATURE_COUNT,input_kind=winner.input_kind,preprocessing=PREPROCESSING_SPEC,selected_features=selected_features,
         output_features=int(final.named_steps['pca'].n_components_) if isinstance(final,Pipeline) and 'pca' in final.named_steps else len(selected_features),
         parameters={k:v for k,v in final.get_params().items() if isinstance(v,(str,int,float,bool,type(None)))},selection='F1 macro en validación fija; test no usado para elegir')
     save_json(MODELS/'hyperparameters.json',hyper)
@@ -248,8 +243,9 @@ def evaluate():
         selection_rule='Mayor F1 macro en validación; selección congelada antes del test',comparison_table=test_rows,
         final_test=final_row,classification_report=report,confusion_matrix=confusion_matrix(a['y_test'],final_pred).tolist(),
         quadratic_kappa=float(cohen_kappa_score(a['y_test'],final_pred,weights='quadratic')),test_size=len(a['y_test']),
-        best_observed_test_model=str(table.iloc[0].Modelo),feature_count=hyper['output_features'],input_features=320,
-        audit=json.loads((REPORTS/'data_quality_audit.json').read_text(encoding='utf-8')))
+        best_observed_test_model=str(table.iloc[0].Modelo),feature_count=hyper['output_features'],input_features=FEATURE_COUNT,
+        test_previously_evaluated=True,evaluation_note='Mismo test ya evaluado en v2; resultado descriptivo, sin confirmación independiente.',
+        preprocessing=PREPROCESSING_SPEC,audit=json.loads((REPORTS/'data_quality_audit.json').read_text(encoding='utf-8')))
     save_json(REPORTS/'modelos_avanzados_metrics.json',metrics)
     save_json(REPORTS/'per_sample_predictions.json',[dict(index=int(i),actual=int(y),predicted=int(p),probabilities=probs.tolist()) for i,(y,p,probs) in enumerate(zip(a['y_test'],final_pred,final_prob))])
     plt.figure(figsize=(9,4));plt.barh(table.Modelo[::-1],table['F1 Macro'][::-1],color='#087f8c');plt.xlim(0,1);plt.xlabel('F1 macro · test');plt.title('Modelos elegidos por familia usando validación');figure('comparacion_modelos.png')
@@ -274,6 +270,8 @@ def evaluate():
     # Feature engineering comparison is VALIDATION ONLY, never selected by test.
     feat=validation[validation.family.isin(['SVM','XGBoost'])]
     plt.figure(figsize=(10,7));plt.barh(feat.Modelo[::-1],feat['F1 Macro'][::-1],color='#087f8c');plt.xlabel('F1 macro · validación');plt.xlim(0,1);plt.title('Selección ANOVA y reducción PCA');figure('feature_engineering_validation.png')
+    top=feat.head(8)
+    plt.figure(figsize=(9,3.5));plt.barh(top.Modelo[::-1],top['F1 Macro'][::-1],color='#087f8c');plt.xlim(0,1);plt.xlabel('F1 macro · validación');plt.title('Ocho mejores configuraciones de representación');figure('feature_engineering_summary.png')
     curves=[];fig,axes=plt.subplots(1,2,figsize=(12,4.5))
     curve_names=[chosen,xgb_name] if chosen!=xgb_name else [chosen,family_winners[family_winners.family=='SVM'].iloc[0].Modelo]
     for ax,name in zip(axes,curve_names):

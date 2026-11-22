@@ -9,7 +9,7 @@ import joblib
 import numpy as np
 import json
 
-from src.features import extract_image_features
+from src.features import extract_image_features, PREPROCESSING_SPEC
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 MODEL_PATH = PROJECT_DIR / "models" / "best_model.joblib"
@@ -24,17 +24,20 @@ def load_model():
 
 
 def predict_image(image_gray: np.ndarray) -> dict:
-    """Predict one grayscale knee radiograph with the saved XGBoost model."""
+    """Predict one grayscale knee radiograph with the versioned final model."""
     if image_gray is None or image_gray.ndim != 2 or image_gray.size == 0:
         raise ValueError("La imagen debe ser una radiografía en escala de grises válida.")
-    feature_dict, _, _ = extract_image_features(image_gray)
+    metadata = json.loads((PROJECT_DIR / 'models' / 'hyperparameters.json').read_text(encoding='utf-8'))
+    if metadata.get('preprocessing') != PREPROCESSING_SPEC:
+        raise ValueError('El modelo y el preprocesamiento tienen versiones distintas; reentrenar o restaurar ambos.')
+    feature_dict, _, flat = extract_image_features(image_gray)
     features = np.fromiter(feature_dict.values(), dtype=np.float32).reshape(1, -1)
+    if metadata.get('input_kind') == 'flat': features = flat.reshape(1, -1)
     model = load_model()
     probabilities = model.predict_proba(features)[0]
     # Use the classifier's decision, as in the reported evaluation. For SVC,
     # predict() and argmax(predict_proba()) can legitimately differ.
     predicted_class = int(model.predict(features)[0])
-    metadata = json.loads((PROJECT_DIR / 'models' / 'hyperparameters.json').read_text(encoding='utf-8'))
     return {
         "model": metadata['name'],
         "protocol": metadata['protocol'],

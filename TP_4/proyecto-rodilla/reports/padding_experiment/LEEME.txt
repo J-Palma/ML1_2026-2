@@ -1,0 +1,25 @@
+EXPERIMENTO DE RELLENO - 22/11/2026
+
+Ejecución: .venv\Scripts\python.exe scripts/evaluate_padding.py
+
+Se compararon cuatro representaciones con SVM RBF C=10 y selección ANOVA
+160, ajustando en 1.103 imágenes de train y evaluando en 236 de validación.
+No se leyeron las imágenes ni las etiquetas del test para este experimento.
+Experimento previo a la adopción: la variante rectangular con máscara ya se integró y se reentrenó en el protocolo v3. Las cifras de este archivo describen el experimento fijo C=10, ANOVA160; no el modelo final v3.
+
+RESULTADOS DE VALIDACIÓN (no confundir con el F1 de test 0,7207 publicado)
+Cuadrado actual: F1 macro 0,5881; relleno añadido medio 46,47 %.
+Cuadrado con máscara: F1 macro 0,5853.
+Rectangular: F1 macro 0,5895.
+Rectangular con máscara: F1 macro 0,6031; relleno añadido medio 4,83 %.
+
+El rectángulo mide 256 de ancho por 144 de alto, conserva la imagen completa
+y la proporción. La máscara excluye relleno artificial de estadísticas de
+intensidad, histogramas, cuadrantes y gradientes; no segmenta la anatomía.
+La representación rectangular cambia también la cuadrícula HOG y pasa de
+320 a 288 variables; por tanto no se atribuye la diferencia solo al negro.
+
+Se reutilizó validación de forma exploratoria. La diferencia no prueba una
+mejora clínica ni una mejora independiente en test. Para usar la alternativa
+en producción se deben reentrenar y versionar conjuntamente el extractor,
+modelo, API, dashboard y resultados; no basta con cambiar la figura.

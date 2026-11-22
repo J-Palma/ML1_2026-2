@@ -1,28 +1,24 @@
-# Guía breve para la defensa
+# Guía de defensa · 8 a 10 minutos
 
-## Recorrido sugerido (8–10 minutos)
+1. Problema: clasificar cinco grados de artrosis; motivación desde procesamiento de imágenes biomédicas.
+2. Datos: 1.650 originales; hashes de píxeles; 6 imágenes contradictorias y 68 copias excluidas; 1.576 únicas.
+3. Mostrar `01_EDA`: ejemplos de duplicados, motivos y copia `data/clean/Training` sin modificar originales.
+4. Preprocesamiento: entrada 256×144, proporción conservada, máscara para estadísticas; 288 variables y SVD sobre 64×36.
+5. Comparación en validación: SVM, Random Forest, XGBoost, logística y SVD; ANOVA y PCA evaluados, no obligatoriamente elegidos.
+6. Elegido: **SVM RBF C=1**, F1 validación **0.6300**. Reentrenamiento con 1.339 imágenes.
+7. Test descriptivo: accuracy **71.31 %**, balanced accuracy **72.09 %**, F1 **0.7155**. El mismo test ya se evaluó en v2; no hay confirmación independiente.
+8. Mostrar matriz, curvas y errores. Menos relleno no garantiza que mejoren todas las métricas; no seleccionar usando test.
+9. Demo: dashboard local o API. El sitio público muestra diez predicciones precalculadas.
+10. Limitaciones: sin IDs ni cohorte externa, formato asociado al grado, promedio bilateral y probabilidades sin calibración clínica.
 
-1. **Problema:** clasificación supervisada multiclase de cinco grados. No diagnostica pacientes.
-2. **Auditoría:** explicar por qué se reemplazó el protocolo inicial: 30 grupos exactos cruzaban particiones; 3 grupos tenían etiquetas contradictorias. Excluir 6 imágenes conflictivas y 68 copias deja 1.576 imágenes únicas.
-3. **Representación:** conservar proporción, CLAHE, 320 números; HOG describe orientación de bordes. El padding afecta estadísticas y es una limitación.
-4. **Selección:** ANOVA elige variables individuales, PCA combina variables en componentes. Ambos se ajustan en entrenamiento. SVD construye subespacios por clase.
-5. **Validación:** parámetros, representación y modelo elegidos con validación, no test. Reentrenar con train+validation y después medir test.
-6. **Resultado:** SVM RBF C=10 con 160 variables. Accuracy 73,00%, F1 macro 0,7207, balanced accuracy 71,85%, kappa cuadrático 0,8485 sobre 237 imágenes.
-7. **Errores:** mostrar matriz y reconocer que Leve es más difícil; discutir la brecha train/CV y posible sobreajuste.
-8. **Demo:** Streamlit, cargar una muestra y ejecutar primero Modelo local, luego API HTTP. La web tiene muestras precalculadas e incluye ejemplos fallidos.
-9. **Límites:** sin IDs de paciente, recortes posiblemente relacionados, formato asociado al grado, promedio bilateral, sin cohorte externa.
+## Preguntas probables
 
-## Preguntas que conviene saber responder
+**¿Se borraron originales?** No: se generó una copia limpia y un registro de exclusiones.
 
-- **¿Por qué F1 macro?** Da igual peso a los cinco grados pese al desbalance.
-- **¿Por qué no basta accuracy?** Puede ocultar una clase con recall bajo.
-- **¿Por qué cambió de XGBoost a SVM?** Se corrigieron datos y particiones, se añadió selección de variables y se eligió por validación. No se deben comparar directamente los protocolos.
-- **¿Qué aprendió SVM?** Una frontera de separación no lineal, con kernel RBF, sobre descriptores numéricos seleccionados y estandarizados.
-- **¿Qué significa C?** Controla el compromiso entre margen y penalización de errores; C=10 se eligió entre candidatos de validación.
-- **¿Hay fuga de datos?** No quedan hashes exactos compartidos; sin IDs no se puede garantizar independencia por paciente ni descartar recortes similares.
-- **¿La probabilidad es certeza médica?** No. Son puntuaciones estimadas del modelo, sin calibración clínica. SVC puede decidir una clase distinta al argmax de probabilidades.
-- **¿Usa la imagen entera?** Se calculan descriptores de vistas ajustadas; si es bilateral se promedian y se pierde lateralidad.
-- **¿Por qué XGBoost tiene 1.500 árboles?** Son 300 rondas y cinco clases, un árbol por clase en cada ronda.
-- **¿Qué falta para una aplicación clínica?** Revisión especializada, separación por paciente, validación externa, control de calidad y calibración.
+**¿Detectaron todos los duplicados?** Solo coincidencias exactas de píxeles; recortes y casi duplicados pueden persistir.
 
-La defensa oral y el envío en eAula deben realizarlos el estudiante. El proyecto no acredita cuestionarios o TPs de exoneración.
+**¿Por qué rectangular?** Reduce el relleno artificial y conserva geometría; el cambio de HOG también influye.
+
+**¿Por qué no ANOVA/PCA en el final?** Se comparan por validación, no se fuerzan. La configuración elegida está registrada antes de reevaluar test.
+
+**¿Se puede diagnosticar?** No; es un prototipo académico sin validación clínica o externa.

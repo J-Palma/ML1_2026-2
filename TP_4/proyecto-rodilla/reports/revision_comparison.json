@@ -1,0 +1,17 @@
+{
+  "note": "Comparación descriptiva del mismo test, ya evaluado; no es evidencia independiente.",
+  "previous": {
+    "protocol": "deduplicated-v2-2026-11-22",
+    "model": "SVM ANOVA160 C=10",
+    "validation_f1": 0.588111,
+    "test_f1": 0.720672,
+    "test_accuracy": 72.9958
+  },
+  "current": {
+    "protocol": "rectangular-masked-v3-2026-11-22",
+    "model": "SVM RBF C=1",
+    "validation_f1": 0.629974,
+    "test_f1": 0.715544,
+    "test_accuracy": 71.308
+  }
+}

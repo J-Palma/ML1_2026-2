@@ -1,7 +1,9 @@
 {
-  "protocol": "deduplicated-v2-2026-11-22",
-  "selected_model": "SVM ANOVA160 C=10",
+  "protocol": "rectangular-masked-v3-2026-11-22",
+  "selected_model": "SVM RBF C=1",
   "selection_metric": "F1 macro validation",
-  "validation_f1": 0.588111,
-  "test_used_for_selection": false
+  "validation_f1": 0.629974,
+  "test_used_for_selection": false,
+  "test_previously_evaluated": true,
+  "evaluation_note": "Reevaluación descriptiva del mismo test tras cambiar preprocesamiento; no es un nuevo test independiente."
 }

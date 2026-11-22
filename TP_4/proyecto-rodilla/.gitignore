@@ -16,3 +16,6 @@ models/*
 scratch/
 .presentation-build/
 .chart-data-*/
+
+# Reproducible clean image copy (manifests are versioned)
+data/clean/

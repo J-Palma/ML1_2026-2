@@ -3,6 +3,8 @@
 import cv2
 import numpy as np
 
+DEFAULT_VIEW_SIZE = (144, 256)  # height, width
+
 
 def resize_with_padding(image, target_size=(256, 256), interpolation=cv2.INTER_AREA):
     """Resize an image to a fixed canvas without changing its aspect ratio."""
@@ -28,7 +30,7 @@ def split_bilateral(image):
     return (image,)
 
 
-def preprocess_view(image, target_size=(256, 256)):
+def preprocess_view(image, target_size=DEFAULT_VIEW_SIZE, return_mask=False):
     """Preserve anatomy on a padded canvas and enhance local contrast."""
     target_h, target_w = target_size
     source_h, source_w = image.shape[:2]
@@ -43,10 +45,10 @@ def preprocess_view(image, target_size=(256, 256)):
     enhanced = clahe.apply(fitted)
     # Keep padding black after CLAHE, so it does not acquire artificial texture.
     enhanced[mask == 0] = 0
-    return enhanced
+    return (enhanced, mask) if return_mask else enhanced
 
 
-def preprocess_knee_image(image_gray, target_size=(256, 256)):
+def preprocess_knee_image(image_gray, target_size=DEFAULT_VIEW_SIZE):
     """Return view(s) on a canvas shaped like the source, avoiding square padding."""
     views = split_bilateral(image_gray)
     # Keep the source aspect ratio for the demonstration; bilateral panels are

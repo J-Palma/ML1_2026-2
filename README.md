@@ -18,4 +18,4 @@ Repositorio para Trabajos Prácticos y proyectos de Machine Learning.
 
 ## Entrega final revisada (22/11/2026)
 
-[Informe y demo](TP_4/README.md). Protocolo depurado: 1.576 imágenes únicas, modelo SVM ANOVA160 elegido por validación, F1 macro test 0,7207. La versión actual reemplaza las métricas iniciales.
+[Informe, notebooks y demo](TP_4/README.md). Copia limpia de 1.576 imágenes; representación rectangular con máscara. Modelo SVM RBF C=1, F1 macro test 0.7155, accuracy 71.31 %. Es una reevaluación descriptiva del test ya examinado en v2.

@@ -14,7 +14,12 @@ class IntegrationTests(unittest.TestCase):
   self.assertFalse(self.manifest.pixel_sha256.duplicated().any())
   self.assertEqual(len(self.manifest),1576)
   a=np.load(ROOT/'data/processed/features_arrays.npz');self.assertTrue(np.isfinite(a['X_test_tabular']).all())
-  model=load_model();self.assertEqual(model.n_features_in_,320);self.assertEqual(model.named_steps['select'].k,160)
+  metadata=json.loads((ROOT/'models/hyperparameters.json').read_text(encoding='utf-8'))
+  model=load_model();self.assertEqual(model.n_features_in_,288);self.assertEqual(metadata['input_features'],288)
+  self.assertEqual(str(a['protocol']),metadata['protocol'])
+  clean=pd.read_csv(ROOT/'data/clean_manifest.csv');self.assertEqual(len(clean),1576)
+  self.assertFalse(clean.pixel_sha256.duplicated().any())
+  self.assertEqual(set(clean.pixel_sha256),set(self.manifest.pixel_sha256))
  def test_uploaded_images_match_serialized_evaluation(self):
   a=np.load(ROOT/'data/processed/features_arrays.npz');pred=load_model().predict(a['X_test_tabular']);test=self.manifest[self.manifest.split_final=='test'].reset_index(drop=True)
   for row in self.samples.itertuples():

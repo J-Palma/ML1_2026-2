@@ -1,0 +1,18 @@
+{
+  "version": "rectangular-masked-v3",
+  "view_size": [
+    144,
+    256
+  ],
+  "hog_size": [
+    96,
+    160
+  ],
+  "flat_size": [
+    36,
+    64
+  ],
+  "masked_statistics": true,
+  "clahe_clip_limit": 1.5,
+  "bilateral_width_threshold": 500
+}

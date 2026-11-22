@@ -1,0 +1,66 @@
+{
+  "experiment": "padding-ablation-v1",
+  "seed": 42,
+  "train_images": 1103,
+  "validation_images": 236,
+  "test_images_read": 0,
+  "production_model_unchanged": true,
+  "configurations": [
+    {
+      "method": "Cuadrado actual",
+      "target_height": 256,
+      "target_width": 256,
+      "masked_statistics": false,
+      "raw_features": 320,
+      "selected_features": 160,
+      "artificial_padding_pct": 46.46657953696789,
+      "validation_f1_macro": 0.5881108567077029,
+      "validation_accuracy": 0.597457627118644,
+      "validation_balanced_accuracy": 0.5838876858413433
+    },
+    {
+      "method": "Cuadrado con máscara",
+      "target_height": 256,
+      "target_width": 256,
+      "masked_statistics": true,
+      "raw_features": 320,
+      "selected_features": 160,
+      "artificial_padding_pct": 46.46657953696789,
+      "validation_f1_macro": 0.585333981926084,
+      "validation_accuracy": 0.5932203389830508,
+      "validation_balanced_accuracy": 0.580720019038965
+    },
+    {
+      "method": "Rectangular",
+      "target_height": 144,
+      "target_width": 256,
+      "masked_statistics": false,
+      "raw_features": 288,
+      "selected_features": 160,
+      "artificial_padding_pct": 4.829474732387349,
+      "validation_f1_macro": 0.589457768156141,
+      "validation_accuracy": 0.6016949152542372,
+      "validation_balanced_accuracy": 0.5900690162480258
+    },
+    {
+      "method": "Rectangular con máscara",
+      "target_height": 144,
+      "target_width": 256,
+      "masked_statistics": true,
+      "raw_features": 288,
+      "selected_features": 160,
+      "artificial_padding_pct": 4.829474732387349,
+      "validation_f1_macro": 0.6030590386078025,
+      "validation_accuracy": 0.6186440677966102,
+      "validation_balanced_accuracy": 0.6050518162739881
+    }
+  ],
+  "limitations": [
+    "Exploratory reuse of validation; improvement is not independent confirmation.",
+    "Rectangle also changes HOG grid: 320 to 288 descriptors before ANOVA.",
+    "Mask excludes added padding, not the original radiographic background.",
+    "No cropping or anatomical segmentation; no claim of clinical improvement."
+  ],
+  "reference_protocol": "deduplicated-v2-2026-11-22",
+  "adopted_in": "rectangular-masked-v3-2026-11-22"
+}

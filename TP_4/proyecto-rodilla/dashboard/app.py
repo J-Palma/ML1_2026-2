@@ -20,7 +20,7 @@ with a:
  frame=pd.DataFrame(m['comparison_table']);key=st.selectbox('Métrica',['F1 Macro','Accuracy (%)','Balanced Acc (%)'])
  st.plotly_chart(px.bar(frame.sort_values(key,ascending=False),x='Modelo',y=key,color='family',text=key),width='stretch')
  st.dataframe(frame,hide_index=True,width='stretch')
- st.caption('La selección final se congeló antes de calcular métricas de test.')
+ st.caption('Selección por validación. Reevaluación del mismo test de v2; no es una nueva confirmación independiente.')
  for name,caption in [('final_confusion_normalizada.png','Matriz normalizada del modelo final'),('modelos_avanzados_learning_curves.png','Entrenamiento y CV estratificada de 3 folds'),('modelos_avanzados_roc_curves.png','ROC multiclase')]:st.image(str(ROOT/'reports/figures'/name),caption=caption,width='stretch')
 with b:
  audit=d['audit'];st.subheader('Duplicados y etiquetas')
@@ -52,9 +52,9 @@ with c:
 with e:
  st.markdown('''1. Auditoría de píxeles por SHA-256: excluir conflictos de etiqueta y copias exactas.
 2. Partición 70/15/15 estratificada por grado y resolución, semilla 42.
-3. Extracción de 320 descriptores; escala proporcional, CLAHE y promedio entre vistas bilaterales.
+3. Extracción de 288 descriptores; entrada 256×144, estadísticas sin relleno, CLAHE y promedio bilateral.
 4. Ajuste, selección ANOVA y PCA exclusivamente con train/validation.
 5. Reentrenamiento con train + validation y evaluación en test reservado.
 
-**Límites:** conjunto pequeño, una etiqueta por estudio bilateral, sin IDs de pacientes ni validación externa. Kappa cuadrático describe errores ordinales, pero los clasificadores entrenan como multiclase nominal. Probabilidades sin calibración clínica.''')
+**Límites:** mismo test ya evaluado en v2; esta reevaluación es descriptiva. Conjunto pequeño, una etiqueta por estudio bilateral, sin IDs de pacientes ni validación externa. Kappa cuadrático describe errores ordinales, pero los clasificadores entrenan como multiclase nominal. Probabilidades sin calibración clínica.''')
  st.link_button('Repositorio y documentación','https://github.com/J-Palma/ML1_2026-2/tree/main/TP_4')

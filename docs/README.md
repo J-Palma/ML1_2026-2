@@ -1,7 +1,9 @@
-# Portal del proyecto
+# Portal del proyecto final
 
-Autor: Jorge Javier Palma Martínez · jpalma@fiuna.edu.py · [J-Palma](https://github.com/J-Palma).
+Jorge Javier Palma Martínez · ML1 FIUNA · 2026
 
-Repositorio: https://github.com/J-Palma/ML1_2026-2
+Protocolo vigente: `deduplicated-v2-2026-11-22`. Los resultados se generan con `src/workflow.py` y `scripts/build_site.py`.
 
-El sitio se publica desde la carpeta `/docs` de la rama `main`. Los notebooks y entregables se encuentran en `TP_4/proyecto-rodilla/`.
+GitHub Pages publica esta carpeta desde `main/docs`. El portal incluye una demo de diez radiografías del dataset público de Kaggle con resultados precalculados. La inferencia de nuevas imágenes funciona en el dashboard Streamlit y la API FastAPI locales.
+
+Código, informe, parámetros, seis notebooks y 14 diapositivas: `TP_4/proyecto-rodilla/`. No usar para diagnóstico.

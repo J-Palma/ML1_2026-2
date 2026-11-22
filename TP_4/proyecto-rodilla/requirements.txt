@@ -1,25 +1,22 @@
-# Machine Learning, pinned to the environment used to serialize the models
-numpy
-pandas
-scipy
+# Entorno usado para entrenar y comprobar la entrega final (Python 3.12)
+numpy==2.5.2
+pandas==3.0.5
+scipy==1.18.0
 scikit-learn==1.9.0
 xgboost==3.4.1
-joblib
-opencv-python-headless
-matplotlib
-seaborn
-
-# Notebook environment
-jupyter
+joblib==1.5.3
+opencv-python==5.0.0.93
+matplotlib==3.11.1
+seaborn==0.13.2
+nbformat==5.11.0
+ipython==9.15.0
+fastapi==0.165.0
+uvicorn==0.54.0
+python-multipart==0.0.34
+streamlit==1.67.0
+plotly==6.7.0
+requests==2.34.2
+httpx==0.28.1
+reportlab
+pypdf
 ipykernel
-tqdm
-
-# Local prediction API
-fastapi
-uvicorn[standard]
-python-multipart
-
-# Interactive dashboard
-streamlit
-plotly
-requests

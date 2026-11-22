@@ -1,0 +1,40 @@
+{
+  "protocol": "deduplicated-v2-2026-11-22",
+  "checked_at": "2026-11-22",
+  "notebooks_executed": [
+    "01_EDA.ipynb",
+    "02_Preprocesamiento.ipynb",
+    "03_Baseline.ipynb",
+    "04_Modelos_Avanzados.ipynb",
+    "05_Feature_Engineering.ipynb",
+    "06_Comparacion_Final.ipynb"
+  ],
+  "integration_tests": {
+    "passed": 3,
+    "failed": 0,
+    "checks": [
+      "unique pixel hashes across partitions",
+      "serialized model vs image extractor vs HTTP API (one sample per grade)",
+      "HTTP missing/empty/corrupt/oversized/wrong MIME requests"
+    ]
+  },
+  "streamlit_apptest": "passed: render and metric interaction, no exceptions",
+  "browser_dashboard": "passed: image upload, local inference and API HTTP; same degree returned",
+  "browser_static_demo": "passed: sample switching and metric comparison",
+  "docker_image_built": false,
+  "docker_note": "Docker executable unavailable; Python API tested instead",
+  "model_sha256": "eedd0e65b77b50438ddddd897867e028202c8402ad32188d8ea8c471c23c2ada",
+  "dataset_audit": {
+    "protocol": "deduplicated-v2-2026-11-22",
+    "raw_images": 1650,
+    "unique_eligible_images": 1576,
+    "duplicate_groups": 63,
+    "conflicting_label_groups": 3,
+    "excluded_conflicting_images": 6,
+    "removed_duplicate_copies": 68,
+    "cross_split_exact_duplicates": 0,
+    "patient_identifiers_available": false,
+    "historical_cross_split_duplicate_groups": 30,
+    "limitation": "Sin identificadores de paciente; no descarta duplicados aproximados, recortes o vistas del mismo paciente."
+  }
+}

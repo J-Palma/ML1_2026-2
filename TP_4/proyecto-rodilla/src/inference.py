@@ -7,11 +7,12 @@ from pathlib import Path
 
 import joblib
 import numpy as np
+import json
 
 from src.features import extract_image_features
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
-MODEL_PATH = PROJECT_DIR / "models" / "xgboost_forest.joblib"
+MODEL_PATH = PROJECT_DIR / "models" / "best_model.joblib"
 CLASS_NAMES = ("Normal", "Dudosa", "Leve", "Moderada", "Severa")
 
 
@@ -30,13 +31,19 @@ def predict_image(image_gray: np.ndarray) -> dict:
     features = np.fromiter(feature_dict.values(), dtype=np.float32).reshape(1, -1)
     model = load_model()
     probabilities = model.predict_proba(features)[0]
-    predicted_class = int(np.argmax(probabilities))
+    # Use the classifier's decision, as in the reported evaluation. For SVC,
+    # predict() and argmax(predict_proba()) can legitimately differ.
+    predicted_class = int(model.predict(features)[0])
+    metadata = json.loads((PROJECT_DIR / 'models' / 'hyperparameters.json').read_text(encoding='utf-8'))
     return {
+        "model": metadata['name'],
+        "protocol": metadata['protocol'],
         "class_index": predicted_class,
         "class_name": CLASS_NAMES[predicted_class],
-        "confidence": float(probabilities[predicted_class]),
+        "confidence": float(probabilities[list(model.classes_).index(predicted_class)]),
         "probabilities": {
             name: float(probabilities[i]) for i, name in enumerate(CLASS_NAMES)
         },
         "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+        "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica.",
     }

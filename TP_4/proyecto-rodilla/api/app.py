@@ -29,15 +29,18 @@ def root():
 
 @app.get("/health")
 def health():
-    ready = MODEL_PATH.exists()
-    return {"status": "ok" if ready else "model_missing", "model_ready": ready}
+    try:
+        model = load_model()
+        return {"status": "ok", "model_ready": True, "classes": model.classes_.tolist()}
+    except (FileNotFoundError, ValueError, OSError) as exc:
+        raise HTTPException(status_code=503, detail="Modelo no disponible; ejecutá el pipeline de entrenamiento.") from exc
 
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     if file.content_type not in {"image/png", "image/jpeg", "image/bmp", "image/tiff"}:
         raise HTTPException(status_code=415, detail="Subí una imagen PNG, JPG, BMP o TIFF.")
-    content = await file.read()
+    content = await file.read(15 * 1024 * 1024 + 1)
     if not content or len(content) > 15 * 1024 * 1024:
         raise HTTPException(status_code=413, detail="La imagen está vacía o supera 15 MB.")
     encoded = np.frombuffer(content, dtype=np.uint8)

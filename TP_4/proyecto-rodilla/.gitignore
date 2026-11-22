@@ -1,30 +1,18 @@
-# Entornos y cache
 .venv/
 venv/
-ENV/
-env/
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
-
-# Datos de imágenes: se descargan aparte desde Kaggle
 data/raw/
 data/processed/
-
-# Conservar el modelo requerido por la API demostrativa
 models/*
-!models/xgboost_forest.joblib
-
-# Secretos y archivos locales
+!models/best_model.joblib
+!models/hyperparameters.json
 .env
 .env.*
 *.log
-.DS_Store
-Thumbs.db
 .vscode/
 .idea/
-
-# Temporales de ejecución y revisión
-.presentation-build/
 scratch/
+.presentation-build/
 .chart-data-*/

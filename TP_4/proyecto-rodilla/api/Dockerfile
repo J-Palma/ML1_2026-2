@@ -6,7 +6,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY api/app.py /app/api/app.py
 COPY src /app/src
-COPY models/xgboost_forest.joblib /app/models/xgboost_forest.joblib
+COPY models/best_model.joblib /app/models/best_model.joblib
+COPY models/hyperparameters.json /app/models/hyperparameters.json
 
 ENV PYTHONPATH=/app
 EXPOSE 8000

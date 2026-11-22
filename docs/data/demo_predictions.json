@@ -1,0 +1,202 @@
+[
+  {
+    "id": "0-0",
+    "image": "assets/demo/grado-0-ejemplo-1.png",
+    "actual": 0,
+    "actual_name": "Normal",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 1,
+    "class_name": "Dudosa",
+    "confidence": 0.4700184724997907,
+    "probabilities": {
+      "Normal": 0.44152870291911384,
+      "Dudosa": 0.4700184724997907,
+      "Leve": 0.06110626857811201,
+      "Moderada": 0.020352108417773254,
+      "Severa": 0.00699444758521
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "0-1",
+    "image": "assets/demo/grado-0-ejemplo-2.png",
+    "actual": 0,
+    "actual_name": "Normal",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 0,
+    "class_name": "Normal",
+    "confidence": 0.3193020876951364,
+    "probabilities": {
+      "Normal": 0.3193020876951364,
+      "Dudosa": 0.22481754381987396,
+      "Leve": 0.21398033218788992,
+      "Moderada": 0.16987031075681372,
+      "Severa": 0.07202972554028604
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "1-0",
+    "image": "assets/demo/grado-1-ejemplo-1.png",
+    "actual": 1,
+    "actual_name": "Dudosa",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 0,
+    "class_name": "Normal",
+    "confidence": 0.3772068580560798,
+    "probabilities": {
+      "Normal": 0.3772068580560798,
+      "Dudosa": 0.2693813506018259,
+      "Leve": 0.19925108071957176,
+      "Moderada": 0.11984752849234993,
+      "Severa": 0.03431318213017254
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "1-1",
+    "image": "assets/demo/grado-1-ejemplo-2.png",
+    "actual": 1,
+    "actual_name": "Dudosa",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 1,
+    "class_name": "Dudosa",
+    "confidence": 0.7160540547418759,
+    "probabilities": {
+      "Normal": 0.23300213522922586,
+      "Dudosa": 0.7160540547418759,
+      "Leve": 0.041186381948787515,
+      "Moderada": 0.004142274989795992,
+      "Severa": 0.0056151530903149815
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "2-0",
+    "image": "assets/demo/grado-2-ejemplo-1.png",
+    "actual": 2,
+    "actual_name": "Leve",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 2,
+    "class_name": "Leve",
+    "confidence": 0.7270737102793524,
+    "probabilities": {
+      "Normal": 0.024854481000598935,
+      "Dudosa": 0.09187510943550896,
+      "Leve": 0.7270737102793524,
+      "Moderada": 0.13280707386557472,
+      "Severa": 0.023389625418965054
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "2-1",
+    "image": "assets/demo/grado-2-ejemplo-2.png",
+    "actual": 2,
+    "actual_name": "Leve",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 3,
+    "class_name": "Moderada",
+    "confidence": 0.6060605225855268,
+    "probabilities": {
+      "Normal": 0.040138606489467536,
+      "Dudosa": 0.10242755986163099,
+      "Leve": 0.19961080177096968,
+      "Moderada": 0.6060605225855268,
+      "Severa": 0.05176250929240466
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "3-0",
+    "image": "assets/demo/grado-3-ejemplo-1.png",
+    "actual": 3,
+    "actual_name": "Moderada",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 3,
+    "class_name": "Moderada",
+    "confidence": 0.6245552067802632,
+    "probabilities": {
+      "Normal": 0.0490640739838716,
+      "Dudosa": 0.1304032232977901,
+      "Leve": 0.17158958754117934,
+      "Moderada": 0.6245552067802632,
+      "Severa": 0.02438790839689562
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "3-1",
+    "image": "assets/demo/grado-3-ejemplo-2.png",
+    "actual": 3,
+    "actual_name": "Moderada",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 2,
+    "class_name": "Leve",
+    "confidence": 0.5128327102361688,
+    "probabilities": {
+      "Normal": 0.0900264586366,
+      "Dudosa": 0.04179917743330024,
+      "Leve": 0.5128327102361688,
+      "Moderada": 0.33850062866059577,
+      "Severa": 0.016841025033335507
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "4-0",
+    "image": "assets/demo/grado-4-ejemplo-1.png",
+    "actual": 4,
+    "actual_name": "Severa",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 4,
+    "class_name": "Severa",
+    "confidence": 0.6202745848729003,
+    "probabilities": {
+      "Normal": 0.005047186554532299,
+      "Dudosa": 0.051328804667796844,
+      "Leve": 0.297975168339682,
+      "Moderada": 0.025374255565088426,
+      "Severa": 0.6202745848729003
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  },
+  {
+    "id": "4-1",
+    "image": "assets/demo/grado-4-ejemplo-2.png",
+    "actual": 4,
+    "actual_name": "Severa",
+    "model": "SVM ANOVA160 C=10",
+    "protocol": "deduplicated-v2-2026-11-22",
+    "class_index": 2,
+    "class_name": "Leve",
+    "confidence": 0.30937112385325666,
+    "probabilities": {
+      "Normal": 0.1259471816562696,
+      "Dudosa": 0.4145609164679802,
+      "Leve": 0.30937112385325666,
+      "Moderada": 0.018519266187943355,
+      "Severa": 0.13160151183455063
+    },
+    "notice": "Demostración académica; no usar para diagnóstico ni decisiones clínicas.",
+    "probability_note": "Puntuaciones del modelo sin calibración clínica; no expresan certeza diagnóstica."
+  }
+]

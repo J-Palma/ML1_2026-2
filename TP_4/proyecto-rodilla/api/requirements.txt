@@ -1,8 +1,7 @@
-fastapi
-uvicorn[standard]
-python-multipart
-numpy
+numpy==2.5.2
 scikit-learn==1.9.0
-xgboost==3.4.1
-joblib
-opencv-python-headless
+joblib==1.5.3
+fastapi==0.165.0
+uvicorn==0.54.0
+python-multipart==0.0.34
+opencv-python-headless==5.0.0.93

@@ -1,0 +1,115 @@
+[
+  {
+    "title": "Clasificación de artrosis de rodilla",
+    "body": "Jorge Javier Palma Martínez\njpalma@fiuna.edu.py · GitHub: J-Palma\nMachine Learning 1 (23433) · FIUNA · 2026"
+  },
+  {
+    "title": "Problema y objetivos",
+    "body": "Clasificación supervisada de cinco grados ordenados.\nObjetivo: comparar un pipeline de características visuales y modelos clásicos.\nAuditar datos, seleccionar variables, validar y demostrar la predicción."
+  },
+  {
+    "title": "Auditoría que cambia el experimento",
+    "body": "1.650 imágenes originales.\n6 imágenes excluidas por etiquetas contradictorias y 68 copias exactas retiradas.\n1.576 imágenes únicas; cero hashes idénticos compartidos entre particiones.\nSin IDs: aún no se garantiza separación por paciente."
+  },
+  {
+    "title": "Dataset depurado y desbalance",
+    "body": "1.103 train · 236 validación · 237 test.\nEstratificación conjunta por grado y resolución; semilla 42.",
+    "image": "distribucion_clases.png"
+  },
+  {
+    "title": "Acondicionamiento y representación",
+    "body": "Proporción conservada, CLAHE y promedio de vistas bilaterales.\n320 descriptores: intensidad, histogramas, gradientes y 288 HOG.\nLa etiqueta y la predicción corresponden al estudio; se pierde lateralidad.",
+    "image": "acondicionamiento_radiografias.png"
+  },
+  {
+    "title": "Selección y reducción dimensional",
+    "body": "ANOVA: 40, 80 y 160 variables. PCA: 32, 64 y 128 componentes.\nTransformaciones ajustadas en train y alternativas comparadas con validación.\nElegido: SVM RBF con 160 variables ANOVA.",
+    "image": "feature_engineering_summary.png"
+  },
+  {
+    "title": "Protocolo de evaluación",
+    "body": "Búsqueda y decisión final exclusivamente con validación.\nReentrenamiento del elegido con 1.339 imágenes (train + validation).\nDespués se calcula el test reservado.\nCurvas: 3 folds dentro de train; no equivalen a validación externa."
+  },
+  {
+    "title": "Modelos evaluados",
+    "body": "Regresión logística L2 como baseline.\nSVM RBF, Random Forest, XGBoost y SVD por subespacios.\nDummy mayoritaria como referencia trivial.\nXGBoost: 300 rondas multiclase = 1.500 árboles.",
+    "table": [
+      [
+        "Modelo",
+        "F1 val.",
+        "Acc. test",
+        "Bal. acc.",
+        "F1 test"
+      ],
+      [
+        "SVM ANOVA160 C=10",
+        "0.5881",
+        "73.00%",
+        "71.85%",
+        "0.7207"
+      ],
+      [
+        "XGBoost 300 rondas",
+        "0.5565",
+        "71.73%",
+        "68.34%",
+        "0.6847"
+      ],
+      [
+        "Random Forest n=300 hoja=2",
+        "0.5438",
+        "67.09%",
+        "63.12%",
+        "0.6436"
+      ],
+      [
+        "Logística C=0.1",
+        "0.5630",
+        "65.40%",
+        "64.01%",
+        "0.6267"
+      ],
+      [
+        "SVD k=10",
+        "0.4931",
+        "59.07%",
+        "56.59%",
+        "0.5645"
+      ],
+      [
+        "Dummy mayoritaria",
+        "0.0925",
+        "30.80%",
+        "20.00%",
+        "0.0942"
+      ]
+    ]
+  },
+  {
+    "title": "Resultados de test",
+    "body": "Elegido por validación: SVM ANOVA160 C=10.\nAccuracy 73.00% · F1 macro 0.7207.\nBalanced accuracy 71.85% · kappa cuadrático 0.8485.",
+    "image": "comparacion_modelos.png"
+  },
+  {
+    "title": "Errores por grado",
+    "body": "La matriz normalizada compara el recall entre clases.\nLa media global no resume por sí sola el comportamiento por grado.",
+    "image": "final_confusion_normalizada.png"
+  },
+  {
+    "title": "Sobreajuste y límites del aprendizaje",
+    "body": "SVM ANOVA160 C=10: train 0.995, CV 0.566. XGBoost 300 rondas: train 1.000, CV 0.553.\nLa brecha indica riesgo de sobreajuste.",
+    "image": "modelos_avanzados_learning_curves.png"
+  },
+  {
+    "title": "Demo, dashboard y API",
+    "body": "GitHub Pages: diez muestras de test con resultados precalculados.\nStreamlit: carga de radiografía e inferencia local o HTTP.\nFastAPI: GET /health y POST /predict.\nUn único Pipeline serializado para evaluación y demostración."
+  },
+  {
+    "title": "Limitaciones y trabajo futuro",
+    "body": "Sin IDs de paciente ni cohorte externa; posibles recortes relacionados.\nFormato y padding pueden introducir atajos. Promedio bilateral sin lateralidad.\nPróximo: separación por paciente, auditoría aproximada, validación externa y calibración."
+  },
+  {
+    "title": "Conclusiones",
+    "body": "La auditoría de datos precede a la evaluación.\nSVM con 160 variables fue elegido por validación; F1 test 0.7207.\nSe entrega un pipeline reproducible, interpretación y demo funcional.\nUso académico: no utilizar para diagnóstico.\nRepositorio: github.com/J-Palma/ML1_2026-2"
+  }
+]

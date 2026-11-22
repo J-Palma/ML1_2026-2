@@ -1,0 +1,7 @@
+{
+  "protocol": "deduplicated-v2-2026-11-22",
+  "selected_model": "SVM ANOVA160 C=10",
+  "selection_metric": "F1 macro validation",
+  "validation_f1": 0.588111,
+  "test_used_for_selection": false
+}

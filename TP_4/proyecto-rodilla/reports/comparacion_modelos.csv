@@ -1,6 +1,7 @@
-Posición,Modelo,Accuracy (%),Balanced Acc (%),F1 Macro,F1 Weighted,Precision Macro,Recall Macro
-1,XGBoost (300 Árboles),72.18,68.84,0.7057,0.7138,0.7617,0.6884
-2,SVM (Kernel RBF),68.95,66.18,0.6702,0.6798,0.6968,0.6618
-3,Random Forest (200 árboles),62.1,57.73,0.5798,0.6051,0.6242,0.5773
-4,Regresión Logística L2 (Baseline),57.66,59.03,0.5676,0.5709,0.5576,0.5903
-5,SVD Subespacios (Menor Norma),55.24,52.96,0.5516,0.55,0.6052,0.5296
+Modelo,family,validation_f1,Accuracy (%),Balanced Acc (%),F1 Macro,F1 Weighted,Precision Macro,Recall Macro
+SVM ANOVA160 C=10,SVM,0.588111,72.9958,71.8515,0.720672,0.725753,0.730798,0.718515
+XGBoost 300 rondas,XGBoost,0.556524,71.73,68.3437,0.684732,0.70719,0.700792,0.683437
+Random Forest n=300 hoja=2,Random Forest,0.543773,67.0886,63.1185,0.643583,0.662737,0.684158,0.631185
+Logística C=0.1,Logística,0.562956,65.4008,64.0147,0.626743,0.656784,0.621404,0.640147
+SVD k=10,SVD,0.493101,59.0717,56.5862,0.56452,0.587438,0.5661,0.565862
+Dummy mayoritaria,Dummy,0.092508,30.8017,20.0,0.094194,0.145066,0.061603,0.2

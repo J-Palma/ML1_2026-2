@@ -1,0 +1,187 @@
+{
+  "project": "Clasificación de artrosis de rodilla · ML1 FIUNA",
+  "protocol": "deduplicated-v2-2026-11-22",
+  "selected_model": "SVM ANOVA160 C=10",
+  "best_model": "SVM ANOVA160 C=10",
+  "best_model_f1_macro": 0.720672,
+  "selection_rule": "Mayor F1 macro en validación; selección congelada antes del test",
+  "comparison_table": [
+    {
+      "Modelo": "SVM ANOVA160 C=10",
+      "family": "SVM",
+      "validation_f1": 0.588111,
+      "Accuracy (%)": 72.9958,
+      "Balanced Acc (%)": 71.8515,
+      "F1 Macro": 0.720672,
+      "F1 Weighted": 0.725753,
+      "Precision Macro": 0.730798,
+      "Recall Macro": 0.718515
+    },
+    {
+      "Modelo": "Logística C=0.1",
+      "family": "Logística",
+      "validation_f1": 0.562956,
+      "Accuracy (%)": 65.4008,
+      "Balanced Acc (%)": 64.0147,
+      "F1 Macro": 0.626743,
+      "F1 Weighted": 0.656784,
+      "Precision Macro": 0.621404,
+      "Recall Macro": 0.640147
+    },
+    {
+      "Modelo": "XGBoost 300 rondas",
+      "family": "XGBoost",
+      "validation_f1": 0.556524,
+      "Accuracy (%)": 71.73,
+      "Balanced Acc (%)": 68.3437,
+      "F1 Macro": 0.684732,
+      "F1 Weighted": 0.70719,
+      "Precision Macro": 0.700792,
+      "Recall Macro": 0.683437
+    },
+    {
+      "Modelo": "Random Forest n=300 hoja=2",
+      "family": "Random Forest",
+      "validation_f1": 0.543773,
+      "Accuracy (%)": 67.0886,
+      "Balanced Acc (%)": 63.1185,
+      "F1 Macro": 0.643583,
+      "F1 Weighted": 0.662737,
+      "Precision Macro": 0.684158,
+      "Recall Macro": 0.631185
+    },
+    {
+      "Modelo": "SVD k=10",
+      "family": "SVD",
+      "validation_f1": 0.493101,
+      "Accuracy (%)": 59.0717,
+      "Balanced Acc (%)": 56.5862,
+      "F1 Macro": 0.56452,
+      "F1 Weighted": 0.587438,
+      "Precision Macro": 0.5661,
+      "Recall Macro": 0.565862
+    },
+    {
+      "Modelo": "Dummy mayoritaria",
+      "family": "Dummy",
+      "validation_f1": 0.092508,
+      "Accuracy (%)": 30.8017,
+      "Balanced Acc (%)": 20.0,
+      "F1 Macro": 0.094194,
+      "F1 Weighted": 0.145066,
+      "Precision Macro": 0.061603,
+      "Recall Macro": 0.2
+    }
+  ],
+  "final_test": {
+    "Modelo": "SVM ANOVA160 C=10",
+    "family": "SVM",
+    "validation_f1": 0.588111,
+    "Accuracy (%)": 72.9958,
+    "Balanced Acc (%)": 71.8515,
+    "F1 Macro": 0.720672,
+    "F1 Weighted": 0.725753,
+    "Precision Macro": 0.730798,
+    "Recall Macro": 0.718515
+  },
+  "classification_report": {
+    "Normal": {
+      "precision": 0.7380952380952381,
+      "recall": 0.8493150684931506,
+      "f1-score": 0.7898089171974523,
+      "support": 73.0
+    },
+    "Dudosa": {
+      "precision": 0.71875,
+      "recall": 0.6571428571428571,
+      "f1-score": 0.6865671641791045,
+      "support": 70.0
+    },
+    "Leve": {
+      "precision": 0.6071428571428571,
+      "recall": 0.5151515151515151,
+      "f1-score": 0.5573770491803278,
+      "support": 33.0
+    },
+    "Moderada": {
+      "precision": 0.84,
+      "recall": 0.7,
+      "f1-score": 0.7636363636363637,
+      "support": 30.0
+    },
+    "Severa": {
+      "precision": 0.75,
+      "recall": 0.8709677419354839,
+      "f1-score": 0.8059701492537313,
+      "support": 31.0
+    },
+    "accuracy": 0.729957805907173,
+    "macro avg": {
+      "precision": 0.7307976190476191,
+      "recall": 0.7185154365446014,
+      "f1-score": 0.7206719286893959,
+      "support": 237.0
+    },
+    "weighted avg": {
+      "precision": 0.7286040787623065,
+      "recall": 0.729957805907173,
+      "f1-score": 0.7257525764002478,
+      "support": 237.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      62,
+      10,
+      1,
+      0,
+      0
+    ],
+    [
+      15,
+      46,
+      5,
+      0,
+      4
+    ],
+    [
+      6,
+      6,
+      17,
+      2,
+      2
+    ],
+    [
+      1,
+      2,
+      3,
+      21,
+      3
+    ],
+    [
+      0,
+      0,
+      2,
+      2,
+      27
+    ]
+  ],
+  "quadratic_kappa": 0.8484742807323453,
+  "test_size": 237,
+  "best_observed_test_model": "SVM ANOVA160 C=10",
+  "feature_count": 160,
+  "input_features": 320,
+  "audit": {
+    "protocol": "deduplicated-v2-2026-11-22",
+    "raw_images": 1650,
+    "unique_eligible_images": 1576,
+    "duplicate_groups": 63,
+    "conflicting_label_groups": 3,
+    "excluded_conflicting_images": 6,
+    "removed_duplicate_copies": 68,
+    "cross_split_exact_duplicates": 0,
+    "patient_identifiers_available": false,
+    "historical_cross_split_duplicate_groups": 30,
+    "limitation": "Sin identificadores de paciente; no descarta duplicados aproximados, recortes o vistas del mismo paciente."
+  }
+}

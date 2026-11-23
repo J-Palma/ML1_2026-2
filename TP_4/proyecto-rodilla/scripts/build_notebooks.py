@@ -204,10 +204,20 @@ section(c,'9. Intensidad, histogramas, cuadrantes y HOG por vista',
 section(c,'10. Combinar vistas de un estudio',
     'Se extrae cada vista por separado y se promedian los vectores. Así se conserva una fila por archivo, aunque se pierde lateralidad. El preview concatena vistas únicamente para visualizar.',definition('features','extract_image_features'))
 section(c,'11. Verificar geometría y compatibilidad con la API',
-    'Se comprueba una imagen de train, se mide el relleno y se compara el extractor visible aquí con el módulo utilizado por la API. Esta comprobación evita que la documentación describa otro preprocesamiento.',
+    'Se comprueba una imagen de train, se mide el relleno y se compara el extractor visible aquí con el módulo utilizado por la API. '
+    'Las radiografías no se incluyen en Git: data/clean debe existir en esta copia del proyecto. '
+    'Si falta la imagen se informa su ruta y se indica cómo preparar los datos, antes de llamar a OpenCV.',
     '''manifest=pd.read_csv(ROOT/'data/dataset_manifest.csv')
 sample=manifest[manifest.split_final=='train'].iloc[0]
-original=cv2.imread(str(ROOT/sample.clean_path),0)
+image_path=ROOT/sample.clean_path
+if not image_path.is_file():
+    raise FileNotFoundError(
+        f'Falta la radiografía limpia: {image_path}. '
+        'Prepará data/raw/Training y ejecutá 01_EDA antes de 02_Preprocesamiento. '
+        'Si cambiaste de carpeta, copiá o enlazá también el dataset: GitHub no contiene las imágenes.')
+original=cv2.imread(str(image_path),0)
+if original is None:
+    raise ValueError(f'OpenCV no pudo leer la imagen: {image_path}. Revisá que sea válida y accesible.')
 conditioned,mask=preprocess_view(split_bilateral(original)[0],return_mask=True)
 assert conditioned.shape==(144,256) and np.all(conditioned[mask==0]==0)
 print(f'Relleno añadido de esta vista: {100*(1-mask.mean()):.2f}%')

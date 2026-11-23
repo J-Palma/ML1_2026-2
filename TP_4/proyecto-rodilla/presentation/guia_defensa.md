@@ -43,9 +43,9 @@ Texto sugerido en primera persona. Usalo para ensayar ideas, sin leerlo palabra 
 
 Mi nombre es Jorge Javier Palma Martínez. Mi proyecto estudia la clasificación de radiografías de rodilla en cinco grados de artrosis mediante procesamiento de imágenes y modelos clásicos de machine learning. Voy a presentar cómo preparé los datos, cómo comparé las alternativas y cuáles son los resultados y las limitaciones del modelo final.
 
-### Diapositiva 2. Problema y objetivos · 35 segundos
+### Diapositiva 2. Artrosis y grados de Kellgren–Lawrence · 55 segundos
 
-La entrada es una radiografía y la salida es una de las cinco etiquetas del dataset: Normal, Dudosa, Leve, Moderada o Severa. El objetivo es construir un pipeline reproducible para comparar métodos y analizar errores. Su relación con bioelectrónica está en el procesamiento de imágenes biomédicas y el análisis de información adquirida por instrumentación médica. No desarrollé el equipo de rayos X ni presento el sistema como un dispositivo de diagnóstico.
+La artrosis de rodilla deteriora el cartílago y otras estructuras de la articulación. Puede causar dolor, rigidez y dificultad para caminar. La escala radiográfica de Kellgren–Lawrence organiza los hallazgos en cinco categorías, del cero al cuatro: Normal, Dudosa, Leve, Moderada y Severa. Se consideran cambios como osteofitos, que son crecimientos óseos en los bordes, y estrechamiento del espacio articular. Mi modelo intenta predecir las etiquetas del dataset. El objetivo del trabajo es comparar modelos, auditar datos y analizar errores. Su relación con bioelectrónica está en el procesamiento de imágenes biomédicas; no desarrollé el equipo de rayos X ni demostré utilidad diagnóstica clínica.
 
 ### Diapositiva 3. Auditoría y limpieza · 45 segundos
 
@@ -583,6 +583,10 @@ T10. Gavish y Donoho, umbral de valores singulares: https://arxiv.org/abs/1305.5
 T11. NumPy SVD: https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html
 
 T12. Ejemplo de la cátedra: https://github.com/carlobeni/Machine-Learning/tree/project-web/models
+
+T13. OMS, artrosis: https://www.who.int/es/news-room/fact-sheets/detail/osteoarthritis
+
+T14. ICMR, clasificación radiográfica de rodilla: https://www.icmr.gov.in/icmrobject/uploads/STWs/1726645313_10_osteoarthritis.pdf
 
 Estas referencias explican APIs y conceptos; las métricas del proyecto no proceden de ellas. El entorno guardado usa scikit-learn 1.9.0; la documentación estable consultada puede mostrar una revisión posterior.
 

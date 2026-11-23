@@ -4,8 +4,47 @@
     "body": "Jorge Javier Palma Martínez\njpalma@fiuna.edu.py · GitHub: J-Palma\nMachine Learning 1 (23433) · FIUNA · 2026"
   },
   {
-    "title": "Problema y objetivos",
-    "body": "Clasificación supervisada de cinco grados ordenados.\nObjetivo: comparar un pipeline de características visuales y modelos clásicos.\nAuditar datos, seleccionar variables, validar y demostrar la predicción."
+    "title": "Artrosis y grados de Kellgren–Lawrence",
+    "body": "La artrosis deteriora el cartílago y otras estructuras de la rodilla.\nPuede causar dolor, rigidez y dificultad para caminar.",
+    "clinical": true,
+    "table": [
+      [
+        "Grado",
+        "Nombre",
+        "Hallazgos radiográficos (resumen)"
+      ],
+      [
+        "0",
+        "Normal",
+        "Sin signos radiográficos de artrosis."
+      ],
+      [
+        "1",
+        "Dudosa",
+        "Cambios pequeños cuya presencia es incierta."
+      ],
+      [
+        "2",
+        "Leve",
+        "Osteofitos definidos y posible estrechamiento del espacio articular."
+      ],
+      [
+        "3",
+        "Moderada",
+        "Estrechamiento claro y cambios óseos más evidentes."
+      ],
+      [
+        "4",
+        "Severa",
+        "Estrechamiento marcado, grandes osteofitos y deformación ósea."
+      ]
+    ],
+    "note": "Osteofitos: crecimientos óseos en los bordes de la articulación.",
+    "objective": "Objetivo: comparar modelos para clasificar los cinco grados, auditar datos y analizar errores.",
+    "sources": [
+      "https://www.who.int/es/news-room/fact-sheets/detail/osteoarthritis",
+      "https://www.icmr.gov.in/icmrobject/uploads/STWs/1726645313_10_osteoarthritis.pdf"
+    ]
   },
   {
     "title": "Auditoría que cambia el experimento",

@@ -1,10 +1,17 @@
 """Execute narrative notebooks in-process, capturing real rich display outputs."""
 from pathlib import Path
+import argparse
 import nbformat
 from IPython.core.interactiveshell import InteractiveShell
 from IPython.utils.capture import capture_output
 ROOT=Path(__file__).resolve().parents[1];shell=InteractiveShell.instance()
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--notebook',help='Ejecutar solo este notebook; por defecto se ejecutan los seis.')
+options=parser.parse_args()
+if options.notebook and not (ROOT/'notebooks'/options.notebook).is_file():
+ parser.error('Notebook inexistente: '+options.notebook)
 for p in sorted((ROOT/'notebooks').glob('*.ipynb')):
+ if options.notebook and p.name!=options.notebook:continue
  shell.reset(new_session=False)
  n=nbformat.read(p,as_version=4);count=0
  for index,cell in enumerate(n.cells):

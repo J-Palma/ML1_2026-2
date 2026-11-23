@@ -258,11 +258,20 @@ section(c,'8. Candidatos de árboles y ensambles',
     'Se agregan 100/200/300 rondas de XGBoost y cuatro configuraciones de Random Forest. El código explicita cantidad de árboles, hoja mínima y pesos del bosque.',pieces('advanced',2,4)+"\nprint('Candidatos:',[item[0] for item in specs])")
 section(c,'9. Entrenar SVM y ensambles',
     'Se ajusta cada candidato y se mide F1 en validación. Esta es una celda de entrenamiento real y puede tardar.',pieces('advanced',4,5)+"\ndisplay(table)")
-c.append(nbformat.v4.new_markdown_cell('## 10. Algoritmo completo del clasificador SVD\n\n'
-    'La clase centra por grado y obtiene una base SVD; decide por menor residuo de proyección. Se incluye completa para estudiar el algoritmo. '
-    'La celda de entrenamiento importa esta misma implementación desde `src.models`, de modo que joblib puede cargarla después desde la API sin depender de una clase definida en un notebook.\n\n```python\n'+definition('models','SVDSubspaceClassifier')+'```'))
+section(c,'10. Definir y ejecutar la clase del clasificador SVD',
+    'Esta celda de código ejecuta la definición completa: fit aprende medias y bases; residuals calcula los errores de proyección; '
+    'predict elige el menor residuo y predict_proba transforma distancias en puntuaciones no calibradas. '
+    'Definir la clase todavía no entrena un modelo. Se conserva la definición interactiva como SVDSubspaceClassifierNotebook para poder probarla. '
+    'La siguiente celda usa la misma implementación desde src.models al crear los objetos que se guardan: '
+    'así joblib puede cargarlos desde la API sin depender de una clase del kernel del notebook.',
+    'from sklearn.base import ClassifierMixin, BaseEstimator\n'
+    +definition('models','SVDSubspaceClassifier')
+    +"\nSVDSubspaceClassifierNotebook = SVDSubspaceClassifier\nprint('Clase ejecutada:', SVDSubspaceClassifierNotebook.__name__)\nprint('Definir la clase no ejecuta fit; el ajuste ocurre en la siguiente celda.')")
 section(c,'11. Ajustar el escalado y las bases SVD',
-    'Se aprende el escalador con píxeles de train y solo se transforma validación. Se calculan bases de hasta 50 componentes por clase para reutilizarlas al probar rangos menores.',pieces('advanced',5,10))
+    'Se importa explícitamente la clase guardable desde src.models, cuyo código se acaba de ejecutar y explicar. '
+    'Se aprende el escalador con píxeles de train y solo se transforma validación. '
+    'Se calculan bases de hasta 50 componentes por clase para reutilizarlas al probar rangos menores.',
+    'from src.models import SVDSubspaceClassifier\n'+pieces('advanced',5,10))
 section(c,'12. Comparar rangos del subespacio',
     'Se evalúan k=5,10,20,30,50 sin ajustar con validación. La clase predicha minimiza la norma residual; las probabilidades softmax de este clasificador no son una calibración clínica.',pieces('advanced',10,13))
 section(c,'13. Guardar la comparación completa',

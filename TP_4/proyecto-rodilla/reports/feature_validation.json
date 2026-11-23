@@ -21,7 +21,7 @@
     "F1 Weighted": 0.620492,
     "Precision Macro": 0.632931,
     "Recall Macro": 0.611112,
-    "seconds": 0.39
+    "seconds": 0.41
   },
   {
     "Modelo": "SVM PCA32 C=10",
@@ -33,7 +33,7 @@
     "F1 Weighted": 0.607783,
     "Precision Macro": 0.619843,
     "Recall Macro": 0.605309,
-    "seconds": 0.38
+    "seconds": 0.36
   },
   {
     "Modelo": "SVM ANOVA160 C=10",
@@ -45,7 +45,7 @@
     "F1 Weighted": 0.61407,
     "Precision Macro": 0.610505,
     "Recall Macro": 0.605052,
-    "seconds": 0.48
+    "seconds": 0.54
   },
   {
     "Modelo": "SVM PCA128 C=10",
@@ -57,7 +57,7 @@
     "F1 Weighted": 0.614634,
     "Precision Macro": 0.61238,
     "Recall Macro": 0.594619,
-    "seconds": 0.5
+    "seconds": 0.49
   },
   {
     "Modelo": "SVM ANOVA160 C=50",
@@ -69,7 +69,7 @@
     "F1 Weighted": 0.613108,
     "Precision Macro": 0.607339,
     "Recall Macro": 0.601808,
-    "seconds": 0.46
+    "seconds": 0.48
   },
   {
     "Modelo": "SVM ANOVA80 C=10",
@@ -81,7 +81,7 @@
     "F1 Weighted": 0.609108,
     "Precision Macro": 0.597945,
     "Recall Macro": 0.587265,
-    "seconds": 0.42
+    "seconds": 0.4
   },
   {
     "Modelo": "XGBoost ANOVA160",
@@ -93,7 +93,7 @@
     "F1 Weighted": 0.609225,
     "Precision Macro": 0.607125,
     "Recall Macro": 0.57649,
-    "seconds": 5.27
+    "seconds": 5.03
   },
   {
     "Modelo": "XGBoost ANOVA80",
@@ -105,7 +105,7 @@
     "F1 Weighted": 0.581407,
     "Precision Macro": 0.579405,
     "Recall Macro": 0.556571,
-    "seconds": 2.71
+    "seconds": 2.39
   },
   {
     "Modelo": "SVM ANOVA40 C=10",
@@ -117,7 +117,7 @@
     "F1 Weighted": 0.554917,
     "Precision Macro": 0.54262,
     "Recall Macro": 0.532702,
-    "seconds": 0.43
+    "seconds": 0.59
   },
   {
     "Modelo": "SVM ANOVA40 C=50",
@@ -129,7 +129,7 @@
     "F1 Weighted": 0.532979,
     "Precision Macro": 0.528267,
     "Recall Macro": 0.504159,
-    "seconds": 0.51
+    "seconds": 0.43
   },
   {
     "Modelo": "XGBoost ANOVA40",
@@ -141,6 +141,6 @@
     "F1 Weighted": 0.525969,
     "Precision Macro": 0.530109,
     "Recall Macro": 0.509161,
-    "seconds": 1.71
+    "seconds": 1.19
   }
 ]

@@ -98,5 +98,15 @@
     "class_in_code_cell": true,
     "portable_training_import": "src.models.SVDSubspaceClassifier",
     "interactive_class_parity_checked": true
+  },
+  "preprocessing_clone_check": {
+    "checked_at": "2026-11-23",
+    "notebook": "02_Preprocesamiento.ipynb",
+    "code_cells_executed": 16,
+    "errors": 0,
+    "geometry_and_api_extractor_parity": "passed",
+    "all_feature_arrays_identical_to_original_project": true,
+    "dataset_access": "local raw/clean junctions; dataset remains excluded from Git",
+    "split_manifest_restored_from_versioned_manifest": true
   }
 }

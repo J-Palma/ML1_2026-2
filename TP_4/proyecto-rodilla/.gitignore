@@ -19,3 +19,12 @@ scratch/
 
 # Reproducible clean image copy (manifests are versioned)
 data/clean/
+
+# Personal study material and generated local copies
+/presentation/guia_defensa.*
+/presentation/preparacion_defensa*
+/presentation/defensa_trazabilidad.json
+/scripts/build_defense_guide.py
+/scripts/update_svd_defense.py
+/docs/
+/output/

@@ -1,8 +1,0 @@
-{
-  "protocol": "rectangular-masked-v3-2026-11-22",
-  "model_sha256": "b9c807010f8577ac9adcdb38ceaaedb2b4fd3ab84ec17003163fb00692366569",
-  "guide_sha256": "4d6ef66159be275dcca8079e4bbf74efeda14042679aa5ede01022e7ca327e00",
-  "questions": 112,
-  "slides": 14,
-  "svd_analysis_sha256": "1a613572056465cb9c60649493071e2912418bfc3f33d617bc17223d2e708a7e"
-}

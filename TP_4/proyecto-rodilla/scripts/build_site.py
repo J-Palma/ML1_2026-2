@@ -1,13 +1,25 @@
 """Publish a static report from the current experiment, with a test-sample demo."""
 from pathlib import Path
 import json,shutil,html,re,hashlib
-R=Path(__file__).resolve().parents[1];S=R/'docs';D=S/'data';D.mkdir(exist_ok=True)
+R=Path(__file__).resolve().parents[1];S=R/'docs';D=S/'data'
+# The public site lives at repository/docs. The project-local mirror is generated
+# and ignored; recover its static assets when running from a fresh checkout.
+repository=R.parents[1]
+published=repository/'docs'
+S.mkdir(parents=True,exist_ok=True);D.mkdir(exist_ok=True)
+if (published/'index.html').exists():
+ for source in published.rglob('*'):
+  if source.is_file():
+   target=S/source.relative_to(published)
+   if not target.exists():target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target)
+(S/'assets').mkdir(exist_ok=True)
 m=json.loads((R/'reports/modelos_avanzados_metrics.json').read_text(encoding='utf-8'));d=json.loads((R/'reports/dataset_summary.json').read_text(encoding='utf-8'));f=m['final_test'];a=d['audit']
-for x,y in [('modelos_avanzados_metrics.json','model_metrics.json'),('dataset_summary.json','dataset_summary.json'),('learning_curves_summary.json','learning_curves_summary.json')]:shutil.copy2(R/'reports'/x,D/y)
-for p in (R/'reports/figures').glob('*.png'):
- if p.stat().st_mtime >= (R/'reports/data_quality_audit.json').stat().st_mtime-10:shutil.copy2(p,S/'assets'/p.name)
+shutil.copy2(R/'reports/modelos_avanzados_metrics.json',D/'model_metrics.json')
+PUBLIC_FIGURES=set()
 repo='https://github.com/J-Palma/ML1_2026-2';base=repo+'/blob/main/TP_4/proyecto-rodilla/'
-def fig(name,caption):return f'<figure class="figure-card"><a href="assets/{name}" target="_blank"><img loading="lazy" src="assets/{name}" alt="{html.escape(caption)}"></a><figcaption>{caption}</figcaption></figure>'
+def fig(name,caption):
+ PUBLIC_FIGURES.add(name)
+ return f'<figure class="figure-card"><a href="assets/{name}" target="_blank"><img loading="lazy" src="assets/{name}" alt="{html.escape(caption)}"></a><figcaption>{caption}</figcaption></figure>'
 def section(id,k,title,body):return f'<section class="section" id="{id}"><p class="eyebrow">{k}</p><h2>{title}</h2><div class="section-copy technical-copy">{body}</div></section>'
 parts=[]
 parts.append(f'''<section class="hero" id="inicio"><div><p class="eyebrow">PROYECTO FINAL · INGENIERÍA ELECTRÓNICA</p><h1>Artrosis de rodilla con <span>Machine Learning</span></h1><p class="hero-lede">Cinco grados y una evaluación reconstruida después de auditar duplicados.</p><div class="hero-actions"><a class="button primary" href="#demo">Explorar demo</a><a class="button secondary" href="{repo}">Código en GitHub ↗</a></div><p class="hero-context">Facultad de Ingeniería · Universidad Nacional de Asunción<br>Machine Learning 1 (23433) · Semestre 2026<br><strong>Jorge Javier Palma Martínez</strong><br><a href="mailto:jpalma@fiuna.edu.py">jpalma@fiuna.edu.py</a> · <a href="https://github.com/J-Palma">GitHub: J-Palma</a></p></div><div class="hero-visual"><div class="hero-center"><strong>{f['F1 Macro']:.3f}</strong><small>F1 macro · test reservado</small><strong>{m['feature_count']} variables</strong><small>seleccionadas de 288</small></div></div></section><section class="notice"><p><strong>Prototipo académico.</strong> No usar para diagnóstico ni decisiones clínicas. Versión: {m['protocol']}.</p></section>''')
@@ -47,9 +59,22 @@ p=S/'assets/site.css';s=p.read_text(encoding='utf-8');extra='\n.demo-grid{displa
 style_version=hashlib.sha256(p.read_bytes()).hexdigest()[:12]
 page.write_text(page.read_text(encoding='utf-8').replace(
     'assets/site.css?v='+version,'assets/site.css?v='+style_version),encoding='utf-8')
+for name in PUBLIC_FIGURES:shutil.copy2(R/'reports/figures'/name,S/'assets'/name)
+(S/'.nojekyll').touch()
+(S/'README.md').write_text('# Portal del proyecto final\n\n'
+ 'El sitio público se despliega desde `main/docs` en la raíz del repositorio. '
+ 'La carpeta `TP_4/proyecto-rodilla/docs` es una salida local generada y no se versiona.\n\n'
+ 'Protocolo vigente: `'+m['protocol']+'`. Los resultados proceden de `src/workflow.py`; '
+ '`scripts/build_demo.py` prepara diez ejemplos precalculados y `scripts/build_site.py` construye el portal. '
+ 'La inferencia sobre imágenes nuevas funciona localmente con Streamlit y FastAPI.\n',encoding='utf-8')
 print('Sitio construido:',m['protocol'])
 
 # When checked out inside the course repository, update the actual Pages source.
-repository=R.parents[1]
 if (repository/'.git').exists():
-    shutil.copytree(S,repository/'docs',dirs_exist_ok=True)
+    publish_paths=['index.html','README.md','.nojekyll','assets/site.css','assets/site.js','data/model_metrics.json']
+    publish_paths+=['assets/'+name for name in sorted(PUBLIC_FIGURES)]
+    if (D/'demo_predictions.json').exists():
+        publish_paths.append('data/demo_predictions.json')
+        publish_paths+=[sample['image'] for sample in json.loads((D/'demo_predictions.json').read_text(encoding='utf-8'))]
+    for relative in publish_paths:
+        target=published/relative;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(S/relative,target)

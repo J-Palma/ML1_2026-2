@@ -38,3 +38,15 @@ venv.bak/
 # OS / System files
 .DS_Store
 Thumbs.db
+
+# Personal coursework archives and internal delivery notes
+/Examenes/
+/TP_4/REVISION_TP4.md
+/material-privado-ML1/
+
+# Unused generated website copies; scientific originals remain in reports
+/docs/assets/comparacion_modelos.png
+/docs/assets/feature_engineering_summary.png
+/docs/assets/modelos_avanzados_confusion_matrices.png
+/docs/data/dataset_summary.json
+/docs/data/learning_curves_summary.json

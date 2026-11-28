@@ -77,7 +77,7 @@ Dashboard: `http://127.0.0.1:8501`. API: `http://127.0.0.1:8000/docs`, salud `/h
 
 El grado usa `predict()` de forma consistente con la evaluación. Las probabilidades de SVC pueden tener un orden diferente; no son certezas clínicas. Modelo y extractor verifican que comparten la misma configuración.
 
-GitHub Pages publica desde `main/docs` en la raíz del repositorio. La demo web explora diez imágenes de test con resultados precalculados, identificados como tales; Streamlit/API procesan imágenes nuevas. La copia `proyecto-rodilla/docs` se genera con el mismo contenido.
+GitHub Pages publica desde `main/docs` en la raíz del repositorio. La demo web explora diez imágenes de test con resultados precalculados, identificados como tales; Streamlit/API procesan imágenes nuevas. La copia `proyecto-rodilla/docs` se genera localmente y se excluye de Git; la carpeta pública es `docs` en la raíz del repositorio.
 
 ## Verificación
 
@@ -95,8 +95,6 @@ Las pruebas verifican duplicados con compresiones distintas, conflictos entre et
 - `reports/informe_final.pdf`: informe vigente.
 - `reports/informe_parcial1.pdf`: resumen retrospectivo; no acredita entrega anterior.
 - `presentation/slides.pdf`: 14 diapositivas vigentes.
-- `presentation/guia_defensa.md`: guion y preguntas para la defensa.
-- `presentation/preparacion_defensa_completa.pdf`: guía ampliada con 112 preguntas y anexo SVD.
 - `models/best_model.joblib`: pipeline final serializado.
 - `models/hyperparameters.json`: configuración del modelo y extractor.
 - `reports/`: métricas, gráficos, auditoría y comparación de versiones.
@@ -107,12 +105,8 @@ Las carpetas de imágenes, entorno virtual y matrices no se versionan. Los manif
 
 El notebook 04 incluye código explicado y ejecutado de valores singulares, suma normalizada, varianza acumulada, F1 de validación frente a k, umbral de Gavish-Donoho por grado y medias/modos/reconstrucciones. Las bases se estiman solo con train y la selección conserva k=10, F1 macro de validación 0,4629. Los resultados están en `reports/svd_analysis.json`, `reports/svd_diagnostics.csv` y tres figuras `svd_*.png`.
 
-Gavish-Donoho es un criterio de reconstrucción bajo hipótesis de ruido no verificadas, y no reemplaza la selección del clasificador. El pipeline final continúa con StandardScaler y SVM RBF C=1, sin SVD. La guía de defensa incluye cómo explicar esta diferencia y doce preguntas adicionales.
+Gavish-Donoho es un criterio de reconstrucción bajo hipótesis de ruido no verificadas, y no reemplaza la selección del clasificador. El pipeline final continúa con StandardScaler y SVM RBF C=1, sin SVD. Las figuras y sus explicaciones se encuentran en el notebook 04.
 
-```powershell
-.\.venv\Scripts\python.exe scripts/update_svd_defense.py
-.\.venv\Scripts\python.exe scripts/build_defense_guide.py
-```
 
 ## Docker
 

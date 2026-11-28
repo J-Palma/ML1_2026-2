@@ -8,4 +8,5 @@ for target in range(5):
  for num,row in enumerate(df[(df.split_final=='test')&(df.target==target)].head(2).itertuples()):
   image=cv2.imread(str(R/row.path),0);name=f'grado-{target}-ejemplo-{num+1}.png';cv2.imwrite(str(folder/name),image)
   out.append(dict(id=f'{target}-{num}',image='assets/demo/'+name,actual=int(target),actual_name=row.class_label,**predict_image(image)))
+(R/'docs/data').mkdir(parents=True,exist_ok=True)
 (R/'docs/data/demo_predictions.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8');print('Demo:',len(out),'muestras de test.')

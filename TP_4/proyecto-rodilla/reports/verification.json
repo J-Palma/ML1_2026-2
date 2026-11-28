@@ -88,9 +88,7 @@
       "all new notebook cells executed without errors",
       "final model, metrics and selection decision hashes unchanged"
     ],
-    "figures_reviewed": 3,
-    "defense_questions": 112,
-    "defense_pdf_pages": 25
+    "figures_reviewed": 3
   },
   "svd_class_executable": {
     "notebook": "04_Modelos_Avanzados.ipynb",
